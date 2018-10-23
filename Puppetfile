@@ -15,3 +15,15 @@ forge 'https://forge.puppet.com'
 #mod 'apache',
 #  :git    => 'https://github.com/puppetlabs/puppetlabs-apache',
 #  :branch => 'docs_experiment'
+
+# used in profile::base.pp
+mod 'puppetlabs/ntp', '7.3.0'
+mod 'saz/timezone', '5.0.2'
+
+# dep of ntp
+mod 'puppetlabs/stdlib', '4.25.1'
+
+# dep of timezone
+mod 'stm/debconf', '2.0.0'
+
+

@@ -32,22 +32,13 @@ node default {
 }
 
 node manager.borg.trek {
-  file { '/root/managerfile':
-    ensure => 'present',
-  }
   include ::role::manager
 }
 
 node jenkins.borg.trek {
-  file { '/root/jenkinsfile':
-    ensure => 'present',
-  }
   include ::role::jenkins
 }
 
 node app.borg.trek {
-  file { '/root/appmanager':
-    ensure => 'present',
-  }
   include ::role::app
 }
