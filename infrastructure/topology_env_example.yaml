@@ -1,2 +1,7 @@
 parameters:
-  key_name: yourkeyhere
+  key_name: youropenstackkeyhere
+  github_ssh_private_key: |
+    -----BEGIN RSA PRIVATE KEY-----
+    yourgithubkeyhere
+    -----END RSA PRIVATE KEY-----
+

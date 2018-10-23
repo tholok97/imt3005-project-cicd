@@ -48,6 +48,12 @@ parameters:
     type: comma_delimited_list
     description: Security groups
     default: default,linux
+  github_ssh_private_key:
+    type: string
+    description: >
+      Private key used to authenticate with Github for access to private repositories
+    default: |
+      no key here!!
 
 resources:
 
@@ -88,7 +94,11 @@ resources:
       networks:
         - port: { get_resource: manager_port }
       user_data_format: RAW
-      user_data: { get_file: lib/manager_boot.bash }
+      user_data:
+        str_replace:
+          template: { get_file: lib/manager_boot.bash }
+          params:
+            openstack_heat_strreplace_github_ssh_private_key: { get_param: github_ssh_private_key }
 
   manager_port:
     type: OS::Neutron::Port
