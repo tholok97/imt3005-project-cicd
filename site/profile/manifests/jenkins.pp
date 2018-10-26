@@ -22,8 +22,10 @@ class profile::jenkins {
     subscribe   => File['/tmp/Dockerfile'],
   }
 
-  # create dir for below janky solution
-  file { '/var/lib/docker/volumes/jenkins_home/_data':
+  # create dir tree for below janky solution
+  file { [ '/var/', '/var/lib/', '/var/lib/docker/', '/var/lib/docker/volumes/', 
+           '/var/lib/docker/volumes/jenkins_home/', '/var/lib/docker/volumes/jenkins_home/_data/', 
+           '/var/lib/docker/volumes/jenkins_home/_data/' ]:
     ensure => 'directory',
   }
 
