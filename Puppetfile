@@ -16,6 +16,15 @@ forge 'https://forge.puppet.com'
 #  :git    => 'https://github.com/puppetlabs/puppetlabs-apache',
 #  :branch => 'docs_experiment'
 
+# used in profile::docker
+mod 'puppetlabs/docker', '3.1.0'
+
+# deps of docker
+mod 'puppetlabs/apt', '4.4.1'
+mod 'puppetlabs/translate', '1.1.0'
+mod 'puppetlabs/powershell', '2.1.4'
+mod 'puppetlabs/reboot', '2.0.0'
+
 # used in profile::base.pp
 mod 'puppetlabs/ntp', '7.3.0'
 mod 'saz/timezone', '5.0.2'
