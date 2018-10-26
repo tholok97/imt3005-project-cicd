@@ -64,6 +64,7 @@ nder:1.10 email-ext:2.62 slack:2.3 parameterized-trigger:2.35.2 copyartifact:1.4
   docker::run { 'jenkins2':
     image      => 'jenkins2',
     ports      => ['8081:8080', '50001:50000'],
+    # TODO: below file should be present in this repo. Forgot to copy it over from manual testing
     volumes    => [ '/home/ubuntu/praqma-jenkins-casc/jenkins.yaml:/var/jenkins_home/jenkins.yaml' ],
     env        => ['CASC_JENKINS_CONFIG=/var/jenkins_home/jenkins.yaml'],
     subscribe  => Docker::Image['jenkins2'],
