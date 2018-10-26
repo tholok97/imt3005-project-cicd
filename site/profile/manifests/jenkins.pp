@@ -10,63 +10,37 @@ class profile::jenkins {
 
   include 'docker'
 
-  # have to add Docker to the official Jenkins Docker image:
-  file { '/home/ubuntu/praqma-jenkins-casc/plugins_extra.txt':
-    ensure  => present,
-    content => '
-credentials:2.1.17
-git:3.9.0
-ssh-slaves:1.26
-warnings:4.66
-matrix-auth:2.3
-job-dsl:1.70
-workflow-aggregator:2.5
-timestamper:1.8.9
-github-oauth:0.29
-pretested-integration:3.0.1
-envinject:2.1.6
-text-finder:1.10
-email-ext:2.62
-slack:2.3
-parameterized-trigger:2.35.2
-copyartifact:1.41
-htmlpublisher:1.16
-  ',
+  # create dockerfile 
+  file { '/tmp/Dockerfile':
+    ensure  => 'present',
+    source => 'puppet:///modules/profile/jenkins_dockerfile',
   }
 
-  # have to add Docker to the official Jenkins Docker image:
-  file { '/tmp/Dockerfile2':
-    ensure  => present,
-    content => '
-FROM praqma/jenkins4casc:1.0
-
-LABEL maintainer="man@praqma.net"
-#COPY plugins_extra.txt /usr/share/jenkins/ref/plugins_extra.txt
-
-ARG JAVA_OPTS
-
-# TEMPORARY SOLUTION BECAUSE HAVE PROBLEMS WITH COPYING OVER FILE ABOVE
-RUN /usr/local/bin/install-plugins.sh credentials:2.1.17 git:3.9.0 ssh-slaves:1.26 warnings:4.66 matrix-auth:2.3 job-dsl:1.70 workflow-aggregator:2.5 timestamper:1.8.9 github-oauth:0.29 pretested-integration:3.0.1 envinject:2.1.6 text-fi
-nder:1.10 email-ext:2.62 slack:2.3 parameterized-trigger:2.35.2 copyartifact:1.41 htmlpublisher:1.16
-
-#RUN xargs /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins_extra.txt
-  ',
+  # create image from dockerfile
+  docker::image { 'jenkins_image':
+    docker_file => '/tmp/Dockerfile',
+    subscribe   => File['/tmp/Dockerfile'],
   }
 
-  # create image from Dockerfile
-  docker::image { 'jenkins2':
-    docker_file => '/tmp/Dockerfile2',
-    subscribe   => File['/tmp/Dockerfile2'],
+  # make sure jenkins.yaml file for JCasC is correct.
+  # TODO: this is a janky solution.. There is probably a better way of injecting our 
+  #       config file into our running container. Do I even need volumes here?
+  file { '/var/lib/docker/volumes/jenkins_home/_data/jenkins.yaml':
+    ensure => 'present',
+    source => 'puppet:///modules/profile/jenkins.yaml',
   }
 
-
-  # run the container
-  docker::run { 'jenkins2':
-    image      => 'jenkins2',
-    ports      => ['8081:8080', '50001:50000'],
-    # TODO: below file should be present in this repo. Forgot to copy it over from manual testing
-    volumes    => [ '/home/ubuntu/praqma-jenkins-casc/jenkins.yaml:/var/jenkins_home/jenkins.yaml' ],
+  # run the container, and make sure it restarts whenever the image it's based on or the jenkins.yaml 
+  # config file changes.
+  #
+  # TODO: should jenkins_home have a volume? (for logs, etc.)
+  # TODO: container shouldn't have to restart when the config file changes, as JCasC can reload it's config while 
+  #       jenkins is running
+  docker::run { 'jenkins_container':
+    image      => 'jenkins_image',
+    ports      => ['8080:8080', '50000:50000'],
+    volumes    => [ 'jenkins_home:/var/jenkins_home/jenkins.yaml' ],
     env        => ['CASC_JENKINS_CONFIG=/var/jenkins_home/jenkins.yaml'],
-    subscribe  => Docker::Image['jenkins2'],
+    subscribe  => [ Docker::Image['jenkins_image'], File['/var/lib/docker/volumes/jenkins_home/_data/jenkins.yaml'] ]
   }
 }

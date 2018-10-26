@@ -1,0 +1,16 @@
+FROM praqma/jenkins4casc:1.0
+
+LABEL maintainer="thomahl@stud.ntnu.no"
+
+# below is cleaner solution to plugins installation. Taken from https://github.com/Praqma/praqma-jenkins-casc
+#COPY plugins_extra.txt /usr/share/jenkins/ref/plugins_extra.txt
+
+ARG JAVA_OPTS
+
+# TEMPORARY SOLUTION BECAUSE HAVE PROBLEMS WITH COPYING OVER FILE ABOVE
+# This list should be pruned of unnecessary plugins
+# List taken from https://github.com/Praqma/praqma-jenkins-casc/blob/master/master/plugins_extra.txt
+RUN /usr/local/bin/install-plugins.sh credentials:2.1.17 git:3.9.0 ssh-slaves:1.26 warnings:4.66 matrix-auth:2.3 job-dsl:1.70 workflow-aggregator:2.5 timestamper:1.8.9 github-oauth:0.29 pretested-integration:3.0.1 envinject:2.1.6 text-finder:1.10 email-ext:2.62 slack:2.3 parameterized-trigger:2.35.2 copyartifact:1.41 htmlpublisher:1.16
+
+# other part of better solution to plugins installation. See above
+#RUN xargs /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins_extra.txt
