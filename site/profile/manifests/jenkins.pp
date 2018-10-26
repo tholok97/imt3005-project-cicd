@@ -22,6 +22,11 @@ class profile::jenkins {
     subscribe   => File['/tmp/Dockerfile'],
   }
 
+  # create dir for below janky solution
+  file { '/var/lib/docker/volumes/jenkins_home/_data':
+    ensure => 'directory',
+  }
+
   # make sure jenkins.yaml file for JCasC is correct.
   # TODO: this is a janky solution.. There is probably a better way of injecting our 
   #       config file into our running container. Do I even need volumes here?
