@@ -9,10 +9,13 @@ The goal of the project is to experiment with CI/CD using OpenStack, Jenkins and
 ### Current state
 
 * `openstack create` brings up a stack with a running Puppet Master, Jenkins server and (currently empty) application server. All configured through this control-repo using `manifests/site.pp`
+* Jenkins is configured with a few experimental jobs. One of them tests [my gossinbackup module](https://github.com/tholok97/gossinbackup) using the repo's Jenkinsfile. The job works perfectly.
 * The Jenkins server is configured through [Jenkins Configuration as Code](https://jenkins.io/projects/jcasc/), but the configuration currently has nothing to do with my project. I will rewrite it with jobs for my CI/CD pipelines and so on in the future.
 * **TODO**: Figure out what provider to use for Beaker. Vagrant+virtualbox doesn't seem like a viable option, so left with either [beaker-openstack](https://github.com/puppetlabs/beaker-openstack) or [vagrant-openstack-provider](https://github.com/ggiamarchi/vagrant-openstack-provider).
 * **TODO**: Figure out what kind of app the application server should run.
 * **TODO**: Configure Jenkins with appropriate jobs.
+  * Basic demonstration of functionality done.
+  * How to trigger build? Webhooks are not possible because our floating ip's are internal NTNU addresses.
 * **TODO**: Configure Blue Ocean plugin for Jenkins.
 
 ## About this repository
