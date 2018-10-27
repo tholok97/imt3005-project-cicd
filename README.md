@@ -13,6 +13,7 @@ The goal of the project is to experiment with CI/CD using OpenStack, Jenkins and
 * **TODO**: Figure out what provider to use for Beaker. Vagrant+virtualbox doesn't seem like a viable option, so left with either [beaker-openstack](https://github.com/puppetlabs/beaker-openstack) or [vagrant-openstack-provider](https://github.com/ggiamarchi/vagrant-openstack-provider).
 * **TODO**: Figure out what kind of app the application server should run.
 * **TODO**: Configure Jenkins with appropriate jobs.
+* **TODO**: Configure Blue Ocean plugin for Jenkins.
 
 ## About this repository
 
@@ -71,3 +72,6 @@ imt3005-project-cicd/
 * artikkel om jcasc: <https://www.praqma.com/stories/start-jenkins-config-as-code/>
 * Lecturer's heat definition I based my own on: <https://github.com/githubgossin/IaC-heat-cr>
 * Lecturer's control-repo: <https://github.com/githubgossin/control-repo-cr>
+* How to use Docker with a Pipeline: <https://jenkins.io/doc/book/pipeline/docker/>
+* "don't use docker-in-docker for CI: <http://jpetazzo.github.io/2015/09/03/do-not-use-docker-in-docker-for-ci/>
+* Pretty good example of a Jenkins Dockerfile with Docker installed connected to underlying Docker: <https://github.com/shazChaudhry/docker-jenkins/blob/ee0f386fd1706829b956cb2e723c0f2935496933/Dockerfile>

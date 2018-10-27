@@ -47,6 +47,12 @@ class profile::jenkins {
     ports      => ['8080:8080', '50000:50000'],
     volumes    => [ 'jenkins_home:/var/jenkins_home/jenkins.yaml' ],
     env        => ['CASC_JENKINS_CONFIG=/var/jenkins_home/jenkins.yaml'],
-    subscribe  => [ Docker::Image['jenkins_image'], File['/var/lib/docker/volumes/jenkins_home/_data/jenkins.yaml'] ]
+
+    # If I don't run the container as user root jenkins is not allowed to alter it's containers.
+    # ^ Meaning if I remove user root Jenkins can build and run agent containers just fine, but it is not allowed to make changes in there
+    #
+    # TODO: If I could find a way around this issue that would be awesome
+    username   => 'root',
+    subscribe  => [ Docker::Image['jenkins_image'], File['/var/lib/docker/volumes/jenkins_home/_data/jenkins.yaml'] ],
   }
 }
