@@ -1,35 +1,33 @@
-# A Puppet Control Repository
+# Repo for project "CI/CD with Jenkins and Beaker" in IMT3005 - Infrastructure as Code
 
-* [What You Get From This control\-repo](#what-you-get-from-this-control-repo)
-* [Copy This Repo Into Your Own Git Server](#copy-this-repo-into-your-own-git-server)
-  * [GitLab](#gitlab)
-  * [Bitbucket/Stash](#bitbucketstash)
-  * [Github](#github)
-* [Code Manager Setup](#code-manager-setup)
+## The Project
 
+### The goal
 
-## What You Get From This control-repo
+The goal of the project is to experiment with CI/CD using OpenStack, Jenkins and Beaker. I'm trying to accomplish an infrastructure with a Puppet Master, a Jenkins server and an application server that runs CI/CD on any changes made, and ultimaltely deploys them into production.  
 
-This is a template [control repository](https://puppet.com/docs/pe/latest/code_management/control_repo.html) that has the minimum amount of scaffolding to make it easy to get started with [r10k](https://puppet.com/docs/pe/latest/code_management/r10k.html) or Puppet Enterprise's [Code Manager](https://puppet.com/docs/pe/latest/code_management/code_mgr.html).
+### Current state
 
-The important files and items in this template are as follows:
+* `openstack create` brings up a stack with a running Puppet Master, Jenkins server and (currently empty) application server. All configured through this control-repo using `manifests/site.pp`
+* The Jenkins server is configured through [Jenkins Configuration as Code](https://jenkins.io/projects/jcasc/), but the configuration currently has nothing to do with my project. I will rewrite it with jobs for my CI/CD pipelines and so on in the future.
+* **TODO**: Figure out what provider to use for Beaker. Vagrant+virtualbox doesn't seem like a viable option, so left with either [beaker-openstack](https://github.com/puppetlabs/beaker-openstack) or [vagrant-openstack-provider](https://github.com/ggiamarchi/vagrant-openstack-provider).
+* **TODO**: Figure out what kind of app the application server should run.
+* **TODO**: Configure Jenkins with appropriate jobs.
 
-* Basic example of roles and profiles.
-* An example Puppetfile with various module references.
-* An example Hiera configuration file and data directory with pre-created common.yaml and nodes directory.
-  * These match the default hierarchy that ships with PE.
-* An [environment.conf](https://puppet.com/docs/puppet/5.3/config_file_environment.html) that correctly implements:
-  * A site directory for roles, profiles, and any custom modules for your organization.
-  * A config_version script.
-* An example [config_version](https://puppet.com/docs/puppet/5.3/config_file_environment.html#configversion) script that outputs the git commit ID of the code that was used during a Puppet run.
+## About this repository
+
+This repository is mainly a [control repository](https://puppet.com/docs/pe/latest/code_management/control_repo.html) based on [this template](https://github.com/puppetlabs/control-repo), but it also contains an infrastructure definition in OpenStack Heat that brings up a stack running the control-repo. The original README from the template is stored [here](./README_original.md).
+
+**Currently I make all changes directly to production**. This is to keep it simple while I get the thing up and running. I'll try and switch to another workflow once CI/CD is working.
 
 Here's a visual representation of the structure of this repository:
 
 ```
-control-repo/
+imt3005-project-cicd/
 ├── data/                                 # Hiera data directory.
 │   ├── nodes/                            # Node-specific data goes here.
 │   └── common.yaml                       # Common data goes here.
+├── infrastructure/                       # OpenStack Heat infrastructure definition that defines a stack running this control-repo
 ├── manifests/
 │   └── site.pp                           # The "main" manifest that contains a default node definition.
 ├── scripts/
@@ -46,74 +44,30 @@ control-repo/
 └── hiera.yaml                            # Hiera's configuration file. The Hiera hierarchy is defined here.
 ```
 
-## Copy This Repo Into Your Own Git Server
+## References
 
-To get started with using the control-repo template in your own environment and git server, we've provided steps for the three most common servers we see: [GitLab](#gitlab), [BitBucket](#bitbucketstash), and [GitHub](#github).
+*I write the below list as I go, so it's bound to be a little messy. I'll clean up towards the end of the project.*
 
-### GitLab
-
-1. Install GitLab.
-    * <https://about.gitlab.com/downloads/>
-1. After GitLab is installed you may sign in with the `root` user and password `5iveL!fe`.
-1. Make a user for yourself.
-1. Make an SSH key to link with your user. You’ll want to do this on the machine you intend to edit code from (most likely not your Puppet master, but your local workstation or laptop).
-    * <http://doc.gitlab.com/ce/ssh/README.html>
-    * <https://help.github.com/articles/generating-ssh-keys/>
-1. Create a group called `puppet` (this is case sensitive).
-    * <http://doc.gitlab.com/ce/workflow/groups.html>
-1. Add your user to the `puppet` group as well.
-1. Create a project called `control-repo`, and set the Namespace to be the `puppet` group.
-1. Clone this control repository to your laptop/workstation:
-    * `git clone <repository url>`
-    * `cd control-repo`
-1. Remove this repository as the origin remote:
-    * `git remote remove origin`
-1. Add your internal repository as the origin remote:
-    * `git remote add origin <url of your gitlab repository>`
-1. Push the production branch of the repository from your machine up to your git server
-    * `git push origin production`
-
-### Bitbucket/Stash
-
-1. Install Bitbucket
-    * <https://www.atlassian.com/software/bitbucket/download>
-1. Make a `Project` called `puppet` (with a short name of `PUP`)
-1. Create a repository called `control-repo`
-1. Create a user called `r10k` with a password of `puppet`.
-    * Make the r10k user an admin of the `PUP` project.
-1. Either use the admin user to test pushing code, or create a user for yourself and add your SSH key to that user.
-    * If making a user for yourself, give your user account read/write or admin privilege to the `PUP` project.
-1. Clone this control repository to your laptop/workstation
-    * `git clone <repository url>`
-    * `cd control-repo`
-1. Remove this repository as the origin remote
-    * `git remote remove origin`
-1. Add your internal repository as the origin remote
-    * `git remote add origin <url of your bitbucket repository>`
-1. Push the production branch of the repository from your machine up to your git server
-    * `git push origin production`
-
-### GitHub
-
-1. Prepare your local git client to authenticate with GitHub.com or a local GitHub Enterprise instance.
-    * <https://help.github.com/articles/generating-ssh-keys/>
-    * <https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/>
-1. Create a repository called `control-repo` in your user account or organization. Ensure that "Initialize this repository with a README" is not selected.
-    * <https://help.github.com/articles/creating-a-new-repository/>
-1. Make a note of your repository URL (HTTPS or SSH, depending on your security configuration).
-1. Clone this control repository to your laptop/workstation:
-    * `git clone <repository url>`
-    * `cd control-repo`
-1. Remove this repository as the origin remote:
-    * `git remote remove origin`
-1. Add your internal repository as the origin remote:
-    * `git remote add origin <url of your github repository>`
-1. Push the production branch of the repository from your machine up to your git server
-    * `git push origin production`
-
-## Code Manager Setup
-
-If you use Puppet Enterprise and have not yet enabled and configured Code Manager, in addition to reading the official [documentation](https://puppet.com/docs/pe/latest/code_management/code_mgr.html) for enabling it, you may want to look at the Ramp-Up Program's control repository instead of this one. It's similar to this repo except that it has batteries includes, so to speak. There are pre-built profiles for configuring Code Manager, generating SSH keys, and setting up your Git server to work with Code Manager.
-
-* <https://github.com/Puppet-RampUpProgram/control-repo>
-
+* beaker 101 talk: <https://www.youtube.com/watch?v=cSyJXTYFXFg>
+* beaker github: <https://github.com/puppetlabs/beaker>
+* blog som prater om beaker: <https://club.black.co.at/log/posts/2016-03-28-cooperating-with-travisci/>
+* talk om bl. a. beaker: <https://www.youtube.com/watch?v=GgNrxLfoDF8&t=1623s>
+* artikkel om testing av control-repo: <https://www.example42.com/2017/12/18/beaker_with_vagrant_and_docker/>
+* beaker-puppet docs: <https://www.rubydoc.info/gems/beaker-puppet>
+* issue som omhandler installasjonstrøbbel jeg har: <https://tickets.puppetlabs.com/browse/BKR-821>
+* issue som omhandler runtime trøbbel jeg har: <https://tickets.puppetlabs.com/browse/BKR-1530>
+* issue som omhandler noe jeg slet med: <https://github.com/puppetlabs/beaker-puppet_install_helper/issues/45>
+* prosjekt som løser testing av control-repo: <https://github.com/dylanratcliffe/onceover#nodesets>
+    * artikkel om over: <https://puppet.com/blog/use-onceover-start-testing-rspec-puppet>
+* openstack artikkel om testing (inkluderer beaker): <https://docs.openstack.org/puppet-openstack-guide/latest/contributor/testing.html>
+* lovende repo med testing rundt openstack (mtp. puppet): <https://github.com/openstack/puppet-openstack-integration >
+* video om iac testing: <https://puppet.com/resources/video/r-tyler-croy-of-jenkins-on-infrastructure-as-code-testing/thank-you>
+* pdf om puppet testing med jenkins: <http://iopscience.iop.org/article/10.1088/1742-6596/664/6/062059/pdf>
+* control-repo on steroids: <https://github.com/example42/psick>
+* jenkins config as code video: <https://www.youtube.com/watch?v=PAKWqRE0aTk&t=82s>
+* jcasc docker image: <https://github.com/Praqma/jenkins4casc>
+* handy article about jcasc: <https://automatingguy.com/2018/09/25/jenkins-configuration-as-code/>
+* docker image for jcasc: <https://hub.docker.com/r/praqma/docker4jcasc/>
+* artikkel om jcasc: <https://www.praqma.com/stories/start-jenkins-config-as-code/>
+* Lecturer's heat definition I based my own on: <https://github.com/githubgossin/IaC-heat-cr>
+* Lecturer's control-repo: <https://github.com/githubgossin/control-repo-cr>
