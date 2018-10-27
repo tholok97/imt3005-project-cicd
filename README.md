@@ -21,6 +21,8 @@ This repository is mainly a [control repository](https://puppet.com/docs/pe/late
 
 **Currently I make all changes directly to production**. This is to keep it simple while I get the thing up and running. I'll try and switch to another workflow once CI/CD is working.
 
+Instructions on how to use this repository will be added once it is somewhat stable.
+
 Here's a visual representation of the structure of this repository:
 
 ```
@@ -28,7 +30,7 @@ imt3005-project-cicd/
 ├── data/                                 # Hiera data directory.
 │   ├── nodes/                            # Node-specific data goes here.
 │   └── common.yaml                       # Common data goes here.
-├── infrastructure/                       # OpenStack Heat infrastructure definition that defines a stack running this control-repo
+├── infrastructure/                       # OpenStack Heat infrastructure definition that defines a stack running this control-repo.
 ├── manifests/
 │   └── site.pp                           # The "main" manifest that contains a default node definition.
 ├── scripts/
@@ -61,7 +63,7 @@ imt3005-project-cicd/
 * prosjekt som løser testing av control-repo: <https://github.com/dylanratcliffe/onceover#nodesets>
     * artikkel om over: <https://puppet.com/blog/use-onceover-start-testing-rspec-puppet>
 * openstack artikkel om testing (inkluderer beaker): <https://docs.openstack.org/puppet-openstack-guide/latest/contributor/testing.html>
-* lovende repo med testing rundt openstack (mtp. puppet): <https://github.com/openstack/puppet-openstack-integration >
+* lovende repo med testing rundt openstack (mtp. puppet): <https://github.com/openstack/puppet-openstack-integration>
 * video om iac testing: <https://puppet.com/resources/video/r-tyler-croy-of-jenkins-on-infrastructure-as-code-testing/thank-you>
 * pdf om puppet testing med jenkins: <http://iopscience.iop.org/article/10.1088/1742-6596/664/6/062059/pdf>
 * control-repo on steroids: <https://github.com/example42/psick>
