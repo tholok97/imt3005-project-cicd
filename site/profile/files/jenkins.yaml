@@ -1,8 +1,10 @@
+# JCasC configuration file. Heavily inspired by https://github.com/Praqma/praqma-jenkins-casc
+
 #configuration-as-code:
 #  deprecation: warn
 
 jenkins:
-  systemMessage: "Welcome to the demo setup for Jenkins Configuration as Code plugin. For more information look in the official repo with our demo setup: https://github.com/Praqma/praqma-jenkins-casc"
+  systemMessage: "Greetings friend! I am a system message configured through JCasC"
   agentProtocols: 
     - "JNLP4-connect" 
   securityRealm:
@@ -39,13 +41,62 @@ credentials:
                   privateKey: koko
                   
 jobs: 
-  - url: https://raw.githubusercontent.com/Praqma/job-dsl-collection/master/configuration-as-code-dsl/pipeline.dsl #casc
-  - url: https://raw.githubusercontent.com/Praqma/memory-map-plugin/master/jenkins-pipeline/pipeline.groovy #memory map
-  - url: https://raw.githubusercontent.com/Praqma/codesonar-plugin/master/jenkins-pipeline/pipeline.groovy #codesonar
-  - url: https://raw.githubusercontent.com/Praqma/pretested-integration-plugin/master/jenkins-pipeline/pipeline.groovy #pretested integration
-  - url: https://raw.githubusercontent.com/Praqma/ClearCaseUCMPlugin/master/jenkins-pipeline/pipeline.groovy #ccucm 
-  - url: https://raw.githubusercontent.com/Praqma/Praqmatic-Automated-Changelog/master/jenkins-pipeline/pipeline.groovy #pac
-  - url: https://raw.githubusercontent.com/Praqma/PlusBump/rebirth/jenkins-pipeline/pipeline.groovy #plusbump
+# taken from https://github.com/jenkinsci/configuration-as-code-plugin/blob/master/docs/seed-jobs.md
+# and https://marcesher.com/2016/08/04/jenkins-as-code-comparing-job-dsl-and-pipelines/
+  - script: |
+      def myJob = freeStyleJob('SimpleJob')
+      myJob.with {
+          description 'A Simple Job'
+      }
+  - script: |
+      job('example-job-from-job-dsl') {
+          scm {
+              github('jenkinsci/job-dsl-plugin', 'master')
+          }
+          triggers {
+              cron("@hourly")
+          }
+          steps {
+              shell("echo 'Hello World'")
+          }
+      }
+  - script: |
+      pipelineJob("pipeline-calls-other-pipeline") {
+                  logRotator{
+                      numToKeep 30
+                  }
+                  definition {
+                      cps {
+                          sandbox()
+                          script("""
+                              node {
+                                  echo 'Hello World 1'
+                              }
+                          """.stripIndent())
+                          }
+                      }
+                  }
+# The below job sets up a pipeline job for my gossinbackup module. The Jenkinsfile of that module is used. 
+# Added as a demonstration that jobs work
+# Reference used: https://jenkinsci.github.io/job-dsl-plugin/#path/pipelineJob
+  - script: |
+      pipelineJob("pipeline-job-to-run-gossinbackup") {
+                  definition {
+                      cpsScm {
+                          scm {
+                              git('https://github.com/tholok97/gossinbackup', 'master')
+                          }
+                      }
+                  }
+      }
+# These jobs are from the demo I copied this config from. Left in for reference
+#  - url: https://raw.githubusercontent.com/Praqma/job-dsl-collection/master/configuration-as-code-dsl/pipeline.dsl #casc
+#  - url: https://raw.githubusercontent.com/Praqma/memory-map-plugin/master/jenkins-pipeline/pipeline.groovy #memory map
+#  - url: https://raw.githubusercontent.com/Praqma/codesonar-plugin/master/jenkins-pipeline/pipeline.groovy #codesonar
+#  - url: https://raw.githubusercontent.com/Praqma/pretested-integration-plugin/master/jenkins-pipeline/pipeline.groovy #pretested integration
+#  - url: https://raw.githubusercontent.com/Praqma/ClearCaseUCMPlugin/master/jenkins-pipeline/pipeline.groovy #ccucm 
+#  - url: https://raw.githubusercontent.com/Praqma/Praqmatic-Automated-Changelog/master/jenkins-pipeline/pipeline.groovy #pac
+#  - url: https://raw.githubusercontent.com/Praqma/PlusBump/rebirth/jenkins-pipeline/pipeline.groovy #plusbump
 #  - url: https://raw.githubusercontent.com/Praqma/job-dsl-collection/master/web-pipeline-dsl/web_pipeline_dsl.groovy #websites
 #  - file: ./jobdsl/rut.groovy #rut (private repo...better keep it here)
 

@@ -77,3 +77,6 @@ imt3005-project-cicd/
 * How to use Docker with a Pipeline: <https://jenkins.io/doc/book/pipeline/docker/>
 * "don't use docker-in-docker for CI: <http://jpetazzo.github.io/2015/09/03/do-not-use-docker-in-docker-for-ci/>
 * Pretty good example of a Jenkins Dockerfile with Docker installed connected to underlying Docker: <https://github.com/shazChaudhry/docker-jenkins/blob/ee0f386fd1706829b956cb2e723c0f2935496933/Dockerfile>
+* Article series about Jenkins job-dsl and pipelines: <https://marcesher.com/2016/08/04/jenkins-as-code-comparing-job-dsl-and-pipelines/>
+* Big article about jenkins Pipeline: <https://jenkins.io/solutions/pipeline/>
+* Job-dsl plugin pipeline reference: <https://jenkinsci.github.io/job-dsl-plugin/#path/pipelineJob>
