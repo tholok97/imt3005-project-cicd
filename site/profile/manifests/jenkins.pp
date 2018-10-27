@@ -45,7 +45,8 @@ class profile::jenkins {
   docker::run { 'jenkins_container':
     image      => 'jenkins_image',
     ports      => ['8080:8080', '50000:50000'],
-    volumes    => [ 'jenkins_home:/var/jenkins_home/jenkins.yaml' ],
+    volumes    => [ 'jenkins_home:/var/jenkins_home/jenkins.yaml',
+                    '/var/run/docker.sock:/var/run/docker.sock' ],
     env        => ['CASC_JENKINS_CONFIG=/var/jenkins_home/jenkins.yaml'],
 
     # If I don't run the container as user root jenkins is not allowed to alter it's containers.
