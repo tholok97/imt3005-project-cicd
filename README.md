@@ -83,3 +83,4 @@ imt3005-project-cicd/
 * Article series about Jenkins job-dsl and pipelines: <https://marcesher.com/2016/08/04/jenkins-as-code-comparing-job-dsl-and-pipelines/>
 * Big article about jenkins Pipeline: <https://jenkins.io/solutions/pipeline/>
 * Job-dsl plugin pipeline reference: <https://jenkinsci.github.io/job-dsl-plugin/#path/pipelineJob>
+* (very) good video about Beaker-rspec: <https://www.youtube.com/watch?v=jEJmUQOlaDg>
