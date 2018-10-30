@@ -84,3 +84,4 @@ imt3005-project-cicd/
 * Big article about jenkins Pipeline: <https://jenkins.io/solutions/pipeline/>
 * Job-dsl plugin pipeline reference: <https://jenkinsci.github.io/job-dsl-plugin/#path/pipelineJob>
 * (very) good video about Beaker-rspec: <https://www.youtube.com/watch?v=jEJmUQOlaDg>
+* article about functional testing with Vagrant, OpenStack and Beaker: <http://my1.fr/blog/puppet-module-functional-testing-with-vagrant-openstack-and-beaker/>
