@@ -64,7 +64,7 @@ imt3005-project-cicd/
 * issue som omhandler runtime trøbbel jeg har: <https://tickets.puppetlabs.com/browse/BKR-1530>
 * issue som omhandler noe jeg slet med: <https://github.com/puppetlabs/beaker-puppet_install_helper/issues/45>
 * prosjekt som løser testing av control-repo: <https://github.com/dylanratcliffe/onceover#nodesets>
-    * artikkel om over: <https://puppet.com/blog/use-onceover-start-testing-rspec-puppet>
+  * artikkel om over: <https://puppet.com/blog/use-onceover-start-testing-rspec-puppet>
 * openstack artikkel om testing (inkluderer beaker): <https://docs.openstack.org/puppet-openstack-guide/latest/contributor/testing.html>
 * lovende repo med testing rundt openstack (mtp. puppet): <https://github.com/openstack/puppet-openstack-integration>
 * video om iac testing: <https://puppet.com/resources/video/r-tyler-croy-of-jenkins-on-infrastructure-as-code-testing/thank-you>
@@ -85,3 +85,4 @@ imt3005-project-cicd/
 * Job-dsl plugin pipeline reference: <https://jenkinsci.github.io/job-dsl-plugin/#path/pipelineJob>
 * (very) good video about Beaker-rspec: <https://www.youtube.com/watch?v=jEJmUQOlaDg>
 * article about functional testing with Vagrant, OpenStack and Beaker: <http://my1.fr/blog/puppet-module-functional-testing-with-vagrant-openstack-and-beaker/>
+  * The bootscript in the above article points to a file that looks like this: <https://github.com/openstack/puppet-keystone/blob/master/spec/acceptance/nodesets/nodepool-xenial.yml>. It defines a Beaker node with no hyporvisor, and seems to make beaker use the host machine as it's testing machine (Might do testing like this).
