@@ -18,6 +18,10 @@ The goal of the project is to experiment with CI/CD using OpenStack, Jenkins and
   * How to trigger build? Webhooks are not possible because our floating ip's are internal NTNU addresses.
 * **TODO**: Configure Blue Ocean plugin for Jenkins.
 
+### Development
+
+I made [this Vagrant machine](https://github.com/tholok97/imt3005-vagrant-vm) for working with the project. It includes all the tools I need during development.
+
 ## About this repository
 
 This repository is mainly a [control repository](https://puppet.com/docs/pe/latest/code_management/control_repo.html) based on [this template](https://github.com/puppetlabs/control-repo), but it also contains an infrastructure definition in OpenStack Heat that brings up a stack running the control-repo. The original README from the template is stored [here](./README_original.md).
