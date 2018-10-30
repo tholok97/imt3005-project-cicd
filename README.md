@@ -17,6 +17,7 @@ The goal of the project is to experiment with CI/CD using OpenStack, Jenkins and
   * Basic demonstration of functionality done.
   * How to trigger build? Webhooks are not possible because our floating ip's are internal NTNU addresses.
 * **TODO**: Configure Blue Ocean plugin for Jenkins.
+* **TODO**: Include security groups in infrastructure definition.
 
 ### Development
 
