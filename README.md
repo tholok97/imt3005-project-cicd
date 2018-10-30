@@ -11,6 +11,12 @@ The goal of the project is to experiment with CI/CD using OpenStack, Jenkins and
 * `openstack create` brings up a stack with a running Puppet Master, Jenkins server and (currently empty) application server. All configured through this control-repo using `manifests/site.pp`
 * Jenkins is configured with a few experimental jobs. One of them tests [my gossinbackup module](https://github.com/tholok97/gossinbackup) using the repo's Jenkinsfile. The job works perfectly.
 * The Jenkins server is configured through [Jenkins Configuration as Code](https://jenkins.io/projects/jcasc/), but the configuration currently has nothing to do with my project. I will rewrite it with jobs for my CI/CD pipelines and so on in the future.
+* Have landed on a temporary solution to functional testing based on [this article](http://my1.fr/blog/puppet-module-functional-testing-with-vagrant-openstack-and-beaker/).
+  * A Vagrantfile to provision an exact copy of the running OpenStack instances will be created.
+  * A shell that installs Beaker, clones the module to be tested and runs the tests will be created.
+  * The Vagrantfile will run the above shell as part of the provisioning process, such that if something goes wrong during Beaker testing Vagrant will error out and report it to us.
+  * Tests will be run by doing `vagrant up`. After a test is done simply do `vagrant destroy`, as tests are done during provisioning.
+  * Jenkins will somehow invoke these Vagrant calls. Either defined through Jenkinsfiles, or directly in the job definition.
 * **TODO**: Figure out what provider to use for Beaker. Vagrant+virtualbox doesn't seem like a viable option, so left with either [beaker-openstack](https://github.com/puppetlabs/beaker-openstack) or [vagrant-openstack-provider](https://github.com/ggiamarchi/vagrant-openstack-provider).
 * **TODO**: Figure out what kind of app the application server should run.
 * **TODO**: Configure Jenkins with appropriate jobs.
