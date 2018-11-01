@@ -1,5 +1,18 @@
 # Repo for project "CI/CD with Jenkins and Beaker" in IMT3005 - Infrastructure as Code
 
+*The readme will be cleaned up later...*
+
+## TODO
+
+* Figure out what provider to use for Beaker. Vagrant+virtualbox doesn't seem like a viable option, so left with either [beaker-openstack](https://github.com/puppetlabs/beaker-openstack) or [vagrant-openstack-provider](https://github.com/ggiamarchi/vagrant-openstack-provider).
+* Figure out what kind of app the application server should run.
+* Configure Jenkins with appropriate jobs.
+  * Basic demonstration of functionality done.
+  * How to trigger build? Webhooks are not possible because our floating ip's are internal NTNU addresses.
+* Configure Blue Ocean plugin for Jenkins.
+* Include security groups in infrastructure definition.
+* Separate out general installation in own bootscript (to be used with CI)
+
 ## The Project
 
 ### The goal
@@ -17,13 +30,7 @@ The goal of the project is to experiment with CI/CD using OpenStack, Jenkins and
   * The Vagrantfile will run the above shell as part of the provisioning process, such that if something goes wrong during Beaker testing Vagrant will error out and report it to us.
   * Tests will be run by doing `vagrant up`. After a test is done simply do `vagrant destroy`, as tests are done during provisioning.
   * Jenkins will somehow invoke these Vagrant calls. Either defined through Jenkinsfiles, or directly in the job definition.
-* **TODO**: Figure out what provider to use for Beaker. Vagrant+virtualbox doesn't seem like a viable option, so left with either [beaker-openstack](https://github.com/puppetlabs/beaker-openstack) or [vagrant-openstack-provider](https://github.com/ggiamarchi/vagrant-openstack-provider).
-* **TODO**: Figure out what kind of app the application server should run.
-* **TODO**: Configure Jenkins with appropriate jobs.
-  * Basic demonstration of functionality done.
-  * How to trigger build? Webhooks are not possible because our floating ip's are internal NTNU addresses.
-* **TODO**: Configure Blue Ocean plugin for Jenkins.
-* **TODO**: Include security groups in infrastructure definition.
+
 
 ### Development
 
