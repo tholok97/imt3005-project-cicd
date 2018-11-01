@@ -25,20 +25,47 @@ credentials:
   system:
     domainCredentials:
       - credentials:
-          - usernamePassword: 
+          - usernamePassword:
               scope:    SYSTEM
               id:       github-user
               username: ReleasePraqma
               password: koko
-          - basicSSHUserPrivateKey: 
-              scope: SYSTEM
-              id: agent-private-key
-              username: agentuser
+          - basicSSHUserPrivateKey:
+              scope: GLOBAL  # this has to be global for scm to work in seed jobs
+              id: tholok97_imt3005-project-cicd_deploy-key
+              username: tholok97
               passphrase:  ""
               description: "ssh private key used to connect ssh slaves"
               privateKeySource:
-                directEntry: # The key 'agent_private_key' resolved from a docker secret defined in docker-compose.yml          
-                  privateKey: koko
+                directEntry: # The key 'agent_private_key' resolved from a docker secret defined in docker-compose.yml
+                  privateKey: |
+                    -----BEGIN RSA PRIVATE KEY-----
+                    MIIEowIBAAKCAQEA2fJO47pEqoQkXvoHqyFv5sEfEzENdEAD246rwqGqvfj6TIzA
+                    eCflEYWBVK52lauG5LfTKjE2BLyMXWSEFDjMGNUEnFzyKBkQYFy6A1jX5SDUOA8A
+                    SAat4Htj3+gOxlwZWmErCL5E+HWBkRZCgL9IBx8TwED+9gc/7q2j4eu5qTdbqLkD
+                    vmPlpfBMMZsPwcMSWInwFlQXa/qjwo73MWTWVcbqx5HKn6NcTDlsJFtqkLCZBMGZ
+                    THcno97efYZJRpqs6iQidQ4V6BxPt4AUJhLL7Ehb8vxBzHw6gNkKmqNMxoTtmiWb
+                    QRPBfDh/nQavs1KLZwUj8jhLIkYeHvDu0a9InQIDAQABAoIBABW4GvqAvoULpCA+
+                    5HK+Y0topXMhKUkTdA72OdGskLpbzH3CbQ/MUfycBFZvCGxD6q5yTz3eJ5bzPz2z
+                    XaIyQsyatdnrPUqXrNUdiH/645D2448ul4WV/M/pG/vdQVOtK+2gz0wQwgjMlPvj
+                    bv8rkL787tfy4jWcZVegwDssZZUiOvt53NFJDk+Bk8++1bCaxup5y3Wrr2Sat1e8
+                    KA7/Wzwv5TFxFVZ3qykYpuLm/xFgtbsI8AieWsLsHIkMR1L0XmtwIEF4r0ZfVc5P
+                    m9IrkEeYCEorhPaTMQHTMK3/QMlBjJHGdMLgRzje++awaF+qvl72ALfguFG1CvPL
+                    0OIHB2ECgYEA+sCAFvUBrw+O4ZOz4jPv8GgO7e2xWbNU/ybsDyaH5JyD6MGmVwPy
+                    RUODeQmF681k9spUOUHexzq9/hu1dts4v63v2+ZBQnOEbjoD7gpsnIxr99x/DZOe
+                    Vrmpj8y288MdGAUn9BSWF1JumY/ln6pSQLgzK1J72NWXxiD2+zc1gikCgYEA3oIK
+                    RKl7UMnkArr2Xpy9ocDJzFx9EdQAs4ZLEpDdF4czgooBSxhrIv+fzbpLcS+RcMVR
+                    TpOddRifEzcY+GSS/M3hbHpNU28A2F75ERFJMMeGya4nAMqE7WuImG40hOUNr75X
+                    53vxaV0XIIIBJzy8yrbNR7C7ERycSXTBIKXOqVUCgYEAj2IyHG5/Rv5Lgpv2GZv/
+                    UOX/23e2mQddzAUSqNssi8If/6F0H3/HMmoXrMeQR7UMTb6GiLMs05m4eKyZiFx0
+                    x86LQKAaowfxKyKLirt1PdNiDbqNAFNwEEFcPzkdSKhCY7DXFtAKv01IpxDMig9X
+                    t2BdCiHBZc1FW2sQL7hzJXkCgYB7k6F8TNyOG/KkiY23MjonkdkBxQQ5WJMjIZyk
+                    LQx9ursi7t6VBHTMNUhdi+/GZvLRvOTRTS6QECKZG2qk2cbA3N8rzikQA4BmqyiN
+                    EBqkGsyDSlOjHtcAvU5Zyisk+8nEJ2TOzYlgSTFE/q8BSbxYoXoVLNRYRpmOOmfg
+                    Z/YFGQKBgFoNM7fKW6Bn78J64ti5yMLH1HjT4WY5KfDNE6tuUYvW5k8ruFpElwsT
+                    Xk9geLe6jva+NwIMAnXqG+JIsI5DX59dHTzHO2NpD8Adc34ht1YsleqwF2TXO9Fq
+                    ZkF1yeeuK1gzS3B59a/iHSUGuqy2+A+Ixvke9hsKcCFo3KpRR4bF
+                    -----END RSA PRIVATE KEY-----
                   
 jobs: 
 # taken from https://github.com/jenkinsci/configuration-as-code-plugin/blob/master/docs/seed-jobs.md
@@ -85,6 +112,23 @@ jobs:
                       cpsScm {
                           scm {
                               git('https://github.com/tholok97/gossinbackup', 'master')
+                          }
+                      }
+                  }
+      }
+# WIP
+# sets up control-repo testing
+  - script: |
+      pipelineJob("control repo") {
+                  definition {
+                      cpsScm {
+                          scm {
+                              git {
+                                  remote {
+                                      github('tholok97/imt3005-project-cicd', 'ssh')
+                                      credentials('tholok97_imt3005-project-cicd_deploy-key')
+                                  }
+                              }
                           }
                       }
                   }
