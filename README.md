@@ -98,3 +98,4 @@ imt3005-project-cicd/
 * article about functional testing with Vagrant, OpenStack and Beaker: <http://my1.fr/blog/puppet-module-functional-testing-with-vagrant-openstack-and-beaker/>
   * The bootscript in the above article points to a file that looks like this: <https://github.com/openstack/puppet-keystone/blob/master/spec/acceptance/nodesets/nodepool-xenial.yml>. It defines a Beaker node with no hyporvisor, and seems to make beaker use the host machine as it's testing machine (Might do testing like this).
 * OpenStack article from 2015 talking about their transition to testing their Puppet modules with Beaker: <http://specs.openstack.org/openstack-infra/infra-specs/specs/puppet-module-functional-testing.html>
+* OpenStack development CI docs page: <https://docs.openstack.org/puppet-openstack-guide/latest/contributor/ci.html>
