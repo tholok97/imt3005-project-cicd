@@ -6,7 +6,7 @@ pipeline {
     }
   }
   stages {
-    # will be removed
+    // will be removed
     stage('Testingtesting') {
       steps {
         sh 'echo "koko"'
