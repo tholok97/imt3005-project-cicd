@@ -24,7 +24,7 @@ pipeline {
       }
     }
     stage('r10k deploy') {
-      agent any
+      agent none
       steps {
         sh "ssh -o StrictHostKeyChecking=no root@manager.borg.trek 'r10k deploy environment -p --verbose'"
       }
