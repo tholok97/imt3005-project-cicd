@@ -54,6 +54,18 @@ parameters:
       Private key used to authenticate with Github for access to private repositories
     default: |
       no key here!!
+  jenkins_ssh_private_key:
+    type: string
+    description: >
+      Private key used to authenticate with master from Jenkins
+    default: |
+      no key here!!
+  jenkins_ssh_public_key:
+    type: string
+    description: >
+      Public key placed in master to allow ssh from Jenkins
+    default: |
+      no key here!!
 
 resources:
 
@@ -99,6 +111,7 @@ resources:
           template: { get_file: lib/manager_boot.bash }
           params:
             openstack_heat_strreplace_github_ssh_private_key: { get_param: github_ssh_private_key }
+            imt3005_tholok_project_cicd_jenkins_public_key: { get_param: jenkins_ssh_public_key }
 
   manager_port:
     type: OS::Neutron::Port
@@ -118,30 +131,32 @@ resources:
   app:
     type: lib/managed_linux_server_one_nic.yaml
     properties:
-      key_name:          { get_param: key_name }
-      server_name:       app
-      image:             { get_param: image_linux }
-      flavor:            m1.medium
-      sec_group_linux:   { get_param: sec_group_linux }  
-      public_net:        { get_param: public_net }  
-      admin_net:         { get_resource: internal_net }
-      admin_subnet:      { get_resource: internal_subnet }
-      dns_ip:            { get_attr: [manager, networks, get_param: internal_net_name, 0] }
-      manager_ip:        { get_attr: [manager, networks, get_param: internal_net_name, 0] }
+      key_name:            { get_param: key_name }
+      server_name:         app
+      image:               { get_param: image_linux }
+      flavor:              m1.medium
+      sec_group_linux:     { get_param: sec_group_linux }  
+      public_net:          { get_param: public_net }  
+      admin_net:           { get_resource: internal_net }
+      admin_subnet:        { get_resource: internal_subnet }
+      dns_ip:              { get_attr: [manager, networks, get_param: internal_net_name, 0] }
+      manager_ip:          { get_attr: [manager, networks, get_param: internal_net_name, 0] }
+      jenkins_ssh_private_key: { get_param: jenkins_ssh_private_key }
 
   jenkins:
     type: lib/managed_linux_server_one_nic.yaml
     properties:
-      key_name:          { get_param: key_name }
-      server_name:       jenkins
-      image:             { get_param: image_linux }
-      flavor:            m1.large
-      sec_group_linux:   { get_param: sec_group_linux }  
-      public_net:        { get_param: public_net }  
-      admin_net:         { get_resource: internal_net }
-      admin_subnet:      { get_resource: internal_subnet }
-      dns_ip:            { get_attr: [manager, networks, get_param: internal_net_name, 0] }
-      manager_ip:        { get_attr: [manager, networks, get_param: internal_net_name, 0] }
+      key_name:            { get_param: key_name }
+      server_name:         jenkins
+      image:               { get_param: image_linux }
+      flavor:              m1.large
+      sec_group_linux:     { get_param: sec_group_linux }  
+      public_net:          { get_param: public_net }  
+      admin_net:           { get_resource: internal_net }
+      admin_subnet:        { get_resource: internal_subnet }
+      dns_ip:              { get_attr: [manager, networks, get_param: internal_net_name, 0] }
+      manager_ip:          { get_attr: [manager, networks, get_param: internal_net_name, 0] }
+      jenkins_ssh_private_key: { get_param: jenkins_ssh_private_key }
   
 
 

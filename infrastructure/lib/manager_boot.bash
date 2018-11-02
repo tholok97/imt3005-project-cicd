@@ -11,6 +11,11 @@ apt-get -y install puppetserver pwgen
 /opt/puppetlabs/bin/puppet config set runinterval 300 --section main
 /opt/puppetlabs/bin/puppet config set autosign true --section master
 # keys for hiera-eyaml TBA...
+# set up public key for jenkins as an authorized host
+# ALLOWING LOG IN AS ROOT FOR SIMPLICITY
+cat <<EOF > /root/.ssh/authorized_keys
+imt3005_tholok_project_cicd_jenkins_public_key
+EOF
 # setup git ssh key
 ## add host entry to .ssh/config
 cat <<EOF > /root/.ssh/config
@@ -22,7 +27,7 @@ EOF
 echo "openstack_heat_strreplace_github_ssh_private_key" > /root/.ssh/imt3005_tholok_project_cicd_key
 ## chmod the key to make ssh happy
 chmod 600 /root/.ssh/imt3005_tholok_project_cicd_key
-# r10 and control-repo:
+# r10k and control-repo:
 /opt/puppetlabs/bin/puppet module install puppet-r10k
 cat <<EOF > /var/tmp/r10k.pp
 class { 'r10k':

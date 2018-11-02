@@ -109,3 +109,5 @@ imt3005-project-cicd/
 * thread about committing changes from Jenkins: <https://stackoverflow.com/questions/38769976/is-it-possible-to-git-merge-push-using-jenkins-pipeline>
 * article about creating a continious deployment pipeline with Jenkins and Go (not well written, but it worked): <https://blog.couchbase.com/create-continuous-deployment-pipeline-golang-jenkins/>
 * example of Jenkinsfile for control-repo: <https://github.com/raj-andy1/control-repo/blob/production/Jenkinsfile>
+* article about deployment over ssh from pipeline: <https://medium.com/@weblab_tech/how-to-publish-artifacts-in-jenkins-f021b17fde71>
+* Best-practises for pipeline-plugin: <https://www.cloudbees.com/blog/top-10-best-practices-jenkins-pipeline-plugin>

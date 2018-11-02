@@ -38,6 +38,12 @@ parameters:
   manager_ip:
     type: string
     description: IP address of server manager created in base template
+  jenkins_ssh_private_key:
+    type: string
+    description: >
+      Private key used to authenticate with master from Jenkins
+    default: |
+      no key here!!
 
 resources:
 
@@ -57,6 +63,7 @@ resources:
           params:
             manager_ip_address: { get_param: manager_ip }
             dns_ip_address: { get_param: dns_ip }
+            imt3005_tholok_project_cicd_jenkins_private_key: { get_param: jenkins_ssh_private_key }
 
   server_port_admin:
     type: OS::Neutron::Port

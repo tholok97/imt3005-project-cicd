@@ -18,3 +18,10 @@ cat <<EOF >> /etc/netplan/50-cloud-init.yaml
                 addresses: [dns_ip_address]
 EOF
 netplan apply
+# set up public key for jenkins as an authorized host
+# (this is set up for app as well, but don't have time to fix)
+cat <<EOF >> /home/ubuntu/.ssh/id_rsa
+imt3005_tholok_project_cicd_jenkins_private_key
+EOF
+chmod 600 /home/ubuntu/.ssh/id_rsa
+chown ubuntu /home/ubuntu/.ssh/id_rsa

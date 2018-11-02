@@ -38,6 +38,10 @@ class profile::jenkins {
 
   # run the container, and make sure it restarts whenever the image it's based 
   # on or the jenkins.yaml config file changes.
+  # 
+  # /etc/hosts and /root/.ssh/id_rsa are shared with the host machine so that 
+  # configuration from stack creation process propogates into jenkins container. 
+  # Probably bad, and will fix if I get the time
   #
   # TODO: should jenkins_home have a volume? (for logs, etc.)
   # TODO: container shouldn't have to restart when the config file changes, as 
@@ -46,6 +50,8 @@ class profile::jenkins {
     image     => 'jenkins_image',
     ports     => ['8080:8080', '50000:50000'],
     volumes   => [ 'jenkins_home:/var/jenkins_home/jenkins.yaml',
+                    '/home/ubuntu/.ssh/id_rsa:/root/.ssh/id_rsa',
+                    '/etc/hosts:/etc/hosts',
                     '/var/run/docker.sock:/var/run/docker.sock' ],
     env       => ['CASC_JENKINS_CONFIG=/var/jenkins_home/jenkins.yaml'],
 
