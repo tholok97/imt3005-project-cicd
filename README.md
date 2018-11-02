@@ -108,3 +108,4 @@ imt3005-project-cicd/
 * OpenStack development CI docs page: <https://docs.openstack.org/puppet-openstack-guide/latest/contributor/ci.html>
 * thread about committing changes from Jenkins: <https://stackoverflow.com/questions/38769976/is-it-possible-to-git-merge-push-using-jenkins-pipeline>
 * article about creating a continious deployment pipeline with Jenkins and Go (not well written, but it worked): <https://blog.couchbase.com/create-continuous-deployment-pipeline-golang-jenkins/>
+* example of Jenkinsfile for control-repo: <https://github.com/raj-andy1/control-repo/blob/production/Jenkinsfile>
