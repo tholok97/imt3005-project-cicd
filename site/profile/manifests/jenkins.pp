@@ -1,7 +1,4 @@
 # Runs jenkins inside a container and configures it using Jenkins Configuration as Code
-# Currently just a demonstration that installation and configuration works. Configuration 
-#  is taken from below link. This class will be cleaned up later (Move ugly 'content' 
-#  declarations to files, remove unnecessary plugins, etc).
 # Heavily inspired by:
 # * https://github.com/Praqma/praqma-jenkins-casc (config taken from here)
 # * https://www.praqma.com/stories/start-jenkins-config-as-code/
@@ -13,7 +10,7 @@ class profile::jenkins {
   # create dockerfile 
   file { '/tmp/Dockerfile':
     ensure  => 'present',
-    source => 'puppet:///modules/profile/jenkins_dockerfile',
+    source  => 'puppet:///modules/profile/jenkins_dockerfile',
   }
 
   # create image from dockerfile
@@ -23,7 +20,7 @@ class profile::jenkins {
   }
 
   # create dir tree for below janky solution
-  file { [ '/var/', '/var/lib/', '/var/lib/docker/', '/var/lib/docker/volumes/', 
+  file { [ '/var/', '/var/lib/', '/var/lib/docker/', '/var/lib/docker/volumes/',
            '/var/lib/docker/volumes/jenkins_home/', '/var/lib/docker/volumes/jenkins_home/_data/' ]:
     ensure => 'directory',
   }
@@ -43,17 +40,17 @@ class profile::jenkins {
   # TODO: container shouldn't have to restart when the config file changes, as JCasC can reload it's config while 
   #       jenkins is running
   docker::run { 'jenkins_container':
-    image      => 'jenkins_image',
-    ports      => ['8080:8080', '50000:50000'],
-    volumes    => [ 'jenkins_home:/var/jenkins_home/jenkins.yaml',
+    image       => 'jenkins_image',
+    ports       => ['8080:8080', '50000:50000'],
+    volumes     => [ 'jenkins_home:/var/jenkins_home/jenkins.yaml',
                     '/var/run/docker.sock:/var/run/docker.sock' ],
-    env        => ['CASC_JENKINS_CONFIG=/var/jenkins_home/jenkins.yaml'],
+    env         => ['CASC_JENKINS_CONFIG=/var/jenkins_home/jenkins.yaml'],
 
     # If I don't run the container as user root jenkins is not allowed to alter it's containers.
     # ^ Meaning if I remove user root Jenkins can build and run agent containers just fine, but it is not allowed to make changes in there
     #
     # TODO: If I could find a way around this issue that would be awesome
-    username   => 'root',
-    subscribe  => [ Docker::Image['jenkins_image'], File['/var/lib/docker/volumes/jenkins_home/_data/jenkins.yaml'] ],
+    username    => 'root',
+    subscribe   => [ Docker::Image['jenkins_image'], File['/var/lib/docker/volumes/jenkins_home/_data/jenkins.yaml'] ],
   }
 }

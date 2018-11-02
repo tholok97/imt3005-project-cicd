@@ -1,3 +1,4 @@
+# Base configuration for all nodes
 class profile::base {
 
   #$root_ssh_key = lookup('base_linux::root_ssh_key')

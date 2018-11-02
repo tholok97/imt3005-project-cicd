@@ -31,14 +31,14 @@ node default {
   #   class { 'my_class': }
 }
 
-node manager.borg.trek {
+node 'manager.borg.trek' {
   include ::role::manager
 }
 
-node jenkins.borg.trek {
+node 'jenkins.borg.trek' {
   include ::role::jenkins
 }
 
-node app.borg.trek {
+node 'app.borg.trek' {
   include ::role::app
 }
