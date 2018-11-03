@@ -21,7 +21,9 @@
 
 \section{Introduction}
 
-TBA
+The original goal of this project was to experiment with CI/CD using Jenkins and Beaker. 
+
+I'm trying to accomplish an infrastructure with a Puppet Master, a Jenkins server and an application server that runs CI/CD on any changes made, and ultimaltely deploys them into production.
 
 %This is a short template you can use for your project report. Feel free to
 %make your own modifications to the structure. 
@@ -53,7 +55,30 @@ TBA
 
 \section{Background technology}
 
-TBA
+\subsection{Beaker}
+
+Beaker is a test harness focused on acceptance testing machines. The project is maintained by Puppetlabs themselves, and is widely used. Beaker abstracts away the underlying machines it is testing on by using the concept of SUTs, "Systems Under Test", so it can test for any kind of machine that is supported though plugins. The project consists of many parts, and the relevant ones for this project are "beaker-openstack" and "beaker-vagrant".
+
+% NOT NEEDED?
+%\subsubsection{beaker-rspec}
+
+%Beaker-rspec incorporates the popular testing framework Rspec into the Beaker ecosystem. Rspec tests are 
+
+\subsubsection{beaker-openstack}
+
+Beaker-openstack is meant to allow Beaker to use OpenStack as a provider of SUTs. This plugin is experimental, and the library code reflects that. I have not found any examples of people actually using this plugin.
+
+\subsubsection{beaker-vagrant}
+
+Beaker-vagrant utilizes Vagrant to create and provision nodes. When using this plugin Beaker will create Vagrant configuration files for you, so it seems like there is no room for customization at the Vagrant layer.
+
+\subsection{Vagrant}
+
+Vagrant is an Open-source automation tool for creating and provisioning virtual machines. It was created to make it straight-forward to create disposable and reproducable virtual machines defined in code. It is from my understanding primarily used to create development envirornments, but it can be used for anything involving virtual machines. Vagrant is not tied to any particular virtualization technology, and uses the concept of "providers" to as a high-level abstraction for underlying hypovisors. As Vagrant is widely used you can find providers for pretty much anything. Worth mentioning is the VirtualBox and OpenStack providers, which are the ones I used during this project. The VirtualBox provider is the most popular choice, due to how simple it is to set up. There are a couple OpenStack providers, but I chose to use "vagran-openstack-provider", as it bases it's machines on images from OpenStack, whereas the other one uses OpenStack compliant boxes.
+
+\subsection{Jenkins Configuration as Code}
+
+Jenkins Configuration as Code, or JCasC, is a Jenkins plugin that seeks to replace the web UI with yaml configuration files. Using this plugin it is possible to completely configure a Jenkins server through code. The project has been accepted as a standard component of the Jenkins project, and will be incorporated into Jenkins itself eventually. JCasC is very new, so documentation is sparse.
 
 %Describe the technology involved, you do not have to explain something you have
 %learned in the course, but explain any additional technology that you use in
