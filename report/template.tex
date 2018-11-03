@@ -162,6 +162,12 @@ I decided to have the infrastructure definition in the same repository as the co
 
 Beaker proved to be more difficult to work with than expected. The intial goal was to have my whole control-repo tested through Beaker, but this proved to be a difficult task inside of Skyhigh. 
 
+\subsubsection{Issues with the documentation}
+
+While learning with Beaker I discovered several issues in the documentation. This seems strange, as the project appears to be well maintained. The biggest bug I found was in what might be the most important piece of documentatino of all: the "getting started" tutorial. Following the tutorial step by step rewards you with a big error message following the final command, which is not very inviting. The bug was not easy to fix either. It turns out the tutorial uses functionality from Beaker version 3 which has been completely revised for Beaker 4. Installing Puppet on SUTs used to be a part of the core Beaker project, but has since been moved out into a separate plugin and revised. This meant that before I could even run a Beaker test I had to learn one of it's plugins.
+\\
+I intend to create an issue on the Beaker issue tracker as soon as I have the time. This will be my first real OpenSource contribution, which is exciting.
+
 \subsubsection{The Beaker-openstack plugin}
 
 The most common way to run Beaker seems to be using Vagrant with VirtualBox. This was what I initially planned on doing, but it turns out Skyhigh instances do not support hardware virtualization. VirtualBox running on a system without hardware virtualization is not a pleasant experience, as virtual machines must be 32-bit, and creation and deletion will be very slow. I abandoned VirtualBox for what in principle is a much better solution anyways: using Skyhigh itself as the hyporvisor for Beaker.
@@ -169,28 +175,131 @@ The most common way to run Beaker seems to be using Vagrant with VirtualBox. Thi
 In concept Beaker using Skyhigh for it's SUTs is a good idea. You could run your functional tests on the exact same images as the production systems are using. You could even provision them the exact same way as the production systems as you have access to the bootscripts for the intances in the stack. The issue is that to do this you are dependant on a plugin, and although there is a Beaker-openstack plugin, it is experimental and does not seem stable. First of all it does not immidiately seem to support OpenStack Keystone version 3, which is what Skyhigh seems to be using. Authenticating with Keystone version 2 gives 404 responses, and the top-level API call indicates it is depracted. Looking into the code for the library it does mention Keystone version 3 though, but it is using it in a very strange way. The following snippet is from the part of the library that is causing issues:
 
 \begin{minted}[firstnumber=48,fontsize=\tiny,linenos,breaklines]{Ruby}
-      # Keystone version 3 requires users and projects to be scoped
-      if @credentials[:openstack_auth_url].include?('/v3/')
-        @credentials[:openstack_user_domain]    = @options[:openstack_user_domain] || 'Default'
-        @credentials[:openstack_project_domain] = @options[:openstack_project_domain] || 'Default'
-      end
+# Keystone version 3 requires users and projects to be scoped
+if @credentials[:openstack_auth_url].include?('/v3/')
+  @credentials[:openstack_user_domain]    = @options[:openstack_user_domain] || 'Default'
+  @credentials[:openstack_project_domain] = @options[:openstack_project_domain] || 'Default'
+end
 
-      @compute_client ||= Fog::Compute.new(@credentials)
+@compute_client ||= Fog::Compute.new(@credentials)
 \end{minted}
 
 Line 48 to 52 seems like a temporary solution, as it forces you to use "Default" domain when authenticating. The domain Skyhigh is expecting is "NTNU", so this might be part of the issue. Line 54 is where the library completely fails. There is a bug from inside the function call, which is a poorly documented call to another library, so I did not spend time debugging it.
 
-\subsubsection{Problem 1: Issues with the documentation}
+\subsubsection{Using Vagrant for creation of SUTs for Beaker}
 
-While working with Beaker I discovered several issues in the documentation. This seems strange, as the project appears to be well maintained. The biggest bug I found was in what might be the most important piece of documentatino of all: the "getting started" tutorial. Following the tutorial step by step rewards you with a big error message in the final command, which is not very inviting. The bug was not easy to fix either. It turns out the tutorial uses functionality from Beaker version 3 which has been completely revised for Beaker 4. The issue was with installation of Beaker on the SUTs. The tutorial used a function that not only no longer exists in Beaker, but that has been moved to a separate plugin and revised. This meant that before I could even run a Beaker test I had to learn one of it's plugins.
+While researching alternate approaches to having Beaker work with OpenStack this was the one that seemed the most stable. Instead of having Beaker manage it's SUTs, you instead use Vagrant and it's excellent "vagrant-openstack-plugin" to manage OpenStack instances to test on, install Beaker on the instances, and trick Beaker to run it's tests on the machine it is installed on, which is the Vagrant-managed OpenStack instance. This lets you create exact copies of the production instances, with the only difference being the Beaker installation. Beaker tests can run as normal, but you are giving away the ability to test the system from the outside, as Beaker is inside the SUT calling itself with localhost. Beaker also has the very interesting ability to create multiple SUTs and do tests between them, which you are missing out on.
 \\
-The core Beaker project seems well documented, but trying to figure out any of the hyporvisor plugins from their documentation proved to be very difficult
+I did not end up implementing this in the project control-repo, but I have done enough manual testing to know that this would work. I will provide the outline of how this kind of test would look like........DO THAT
+
+% INCLUDE EXAMPLE VAGRANTFILE WITH BEAKER PROVISIONING SCRIPT AND SO ON
+
+\subsubsection{Beaker-rspec tests for gossinbackup module}
+
+To learn Beaker I created simple tests for my Puppet gossinbackup module. I created them to run as Vagrant with VirtualBox as a hyporvisor, so they unfortunately can not be used in the project infrastructure. INCLUDE TESTS
+
+% INCLUDE CODE FOR THESE TESTS
 
 \subsection{Jenkins}
-\subsubsection{JCasC}
+
+Jenkins is what I spent the majority of my time working with.
+
+\subsubsection{Jenkins Configuration as Code}
+
+I wanted my control-repo to define my whole Jenkins setup, so I went with using the Jenkins Configuration as Code plugin for configuration. It is a very new project, so documentation is sparse. The idea behind it is to mirror the web UI setup with yaml code, but the mapping is not one-to-one, so trying to set it up without help is like shooting in the dark. After struggling with setting it up from scratch myself, I found THIS demo and based my setup around it. 
+\\
+The plugin does have functionality to export yaml code based on a running Jenkins instance. This does not seem very well fleshed out yet, but when this is in place creating the configuration will be a much less painful process. Once JCasC matures I believe it will be massively useful, but currently using it is pretty cumbersome.
+
 \subsubsection{Job DSL}
+
+I used the Job DSL plugin to define "seed jobs", which are jobs used to initialize larger jobs found elsewhere. All my testing code was written in Jenkinsfiles, which I'll discuss next. Here is an example of such a "seed job", taken from my JCasC configuration file:
+
+\begin{minted}[fontsize=\tiny,linenos,breaklines]{yaml}
+jobs:
+(...)
+  # sets up control-repo testing
+  - script: |
+      pipelineJob("control repo") {
+                  definition {
+                      cpsScm {
+                          scm {
+                              git {
+                                  remote {
+                                      github('tholok97/imt3005-project-cicd', 'ssh')
+                                      credentials('tholok97_imt3005-project-cicd_deploy-key')
+                                  }
+                              }
+                          }
+                      }
+                  }
+      }
+\end{minted}
+
+Line 1 defines a list of jobs, and line 5 to 18 is a "seed job" that sets up a pipline for the control-repo. The "credentials" call on line 12 refers to a private ssh key stored using the credentials plugin. See the security discussion.
+
 \subsection{Test pipelines}
+
+Each pipeline has a "seed job" that simply adds the job and makes the "Jenkinsfile" found in each repository do the rest. 
+
 \subsubsection{Control-repo}
+
+The control-repo's pipeline currently just does linting tests and deploys to production. With more time I would have written proper Beaker tests for it using the method described earlier TODO. The following code snippet describes it's Jenkinsfile, with the parts I did not have time to write added:
+
+\begin{minted}[fontsize=\tiny,linenos,breaklines]{groovy}
+pipeline {
+  agent none
+  stages {
+    stage('puppet parser validate') {
+      agent {
+        // using dockerfile defined in jenkins_agents
+        dockerfile {
+          dir 'jenkins_agents/syntax_agent/'
+        }
+      }
+      steps {
+        sh '/opt/puppetlabs/bin/puppet parser validate --debug --verbose .'
+      }
+    }
+    stage('puppet-lint') {
+      agent {
+        // using dockerfile defined in jenkins_agents
+        dockerfile {
+          dir 'jenkins_agents/syntax_agent/'
+        }
+      }
+      steps {
+        sh '/usr/bin/puppet-lint --error-level all --fail-on-warnings .'
+      }
+    }
+    
+    // BEGIN NOT IMPLEMENTED. Added for demonstration
+    stage() {
+      agent {
+        // using dockerfile defined in jenkins_agents
+        dockerfile {
+          dir 'jenkins_agents/vagrant_agent/'
+        }
+      }
+      steps {
+        sh './runVagrantBeakerTest.sh'
+      }
+    }    
+    // END NOT IMPLEMENTED. Rest is present in control-repo
+
+    stage('r10k deploy') {
+      agent { label 'master' }
+      steps {
+        sh "ssh -o StrictHostKeyChecking=no root@manager.borg.trek 'r10k deploy environment -p --verbose'"
+      }
+    }
+  }
+}
+\end{minted}
+
+
+
+% TODO: actually write that section
+
 \subsubsection{gossinbackup}
 \subsubsection{application} % TODO :1
 % \subsection{Vagrant-vm} % include discurrsion on this?
