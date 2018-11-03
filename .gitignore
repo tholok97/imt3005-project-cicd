@@ -1,5 +1,15 @@
 modules/
 
+# ignore latex stuff
+*.pdf
+*.out
+*.aux
+*.log
+*.toc
+_minted*
+*.pyg
+
+
 # ignore heat env file
 infrastructure/topology_env.yaml
 

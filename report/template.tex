@@ -1,0 +1,127 @@
+\input{preamble.tex}
+
+\title{Project Report Template}
+\author{987654, 987651 and 987621}
+
+\begin{document}
+
+\maketitle
+
+\abstract{From Landes~\cite{Landes:66}: The abstract is of utmost
+  importance, for it is read by 10 to 500 times more people than hear or
+  read the entire article. It should not be a mere recital of the subjects
+  covered. Expressions such as "is discussed" and "is described" should
+  never be included! The abstract should be a condensation and
+  concentration of the essential information in the paper.}
+
+\thispagestyle{empty}
+
+\clearpage
+\pagenumbering{roman}
+\setcounter{page}{1}
+\tableofcontents
+
+\clearpage
+\pagenumbering{arabic}
+
+\section{Introduction}
+
+This is a short template you can use for your project report. Feel free to
+make your own modifications to the structure. 
+
+Join together to form project groups of max three people in each group (you can
+also be just one if you prefer to work alone).
+
+For the topic you choose write a report of ca 5-15 pages plus appendices (and prepare a 5-10
+minute presentation).
+
+Try to write as scientifically correct as you can. Write objectively, do not
+write like you are telling a story: "first we did this, then we did that, ...".
+Use correct citations, here are some examples of how to cite correctly:
+\begin{itemize}
+\item Dag Langmyrs \LaTeX book~\cite{Langmyr:03}
+\item Journal articles like~\cite{Klein:09}
+\item Conference proceedings articles like~\cite{Begnum:07} 
+\item Wikipedia pages like~\cite{wikipedia:kerberos:10}
+\end{itemize}
+
+NOTE: it is EXTREMELY important that you write in your own words, and not
+just translate something you find. 
+
+If you want to write ``the perfect introduction'' I strongly suggest you
+read Claerbout's ``Scrutiny of the introduction''~\cite{Claerbout:95}.
+
+Describe what you will do in the introduction chapter (What are the goals of
+you project?).
+
+\section{Background technology}
+
+Describe the technology involved, you do not have to explain something you have
+learned in the course, but explain any additional technology that you use in
+the prpoject.
+
+\section{Survey of similar projects}
+
+There are always someone who has done what you are going to do, or
+something related. Breifly describe at least one or two similar projects,
+to motivate what your contribution will be (Google/DuckDuckGo the best you can
+and find similar projects).
+
+\section{Description of your work}
+
+Describe what you have done (or are doing), relate it the the previous work
+you described in the previous chapter if appropriate.
+
+\section{Results and discussion}
+
+This is the longest chapter, feel free to include some figures. Include
+discussion of all problems you have encountered.
+
+\section{Security aspects}
+
+Provide a brief security analysis. Are you opening any new attack vectors? What
+are the risks? Are there sensitive data? Are clients and servers mutually
+authenticating each other? etc etc
+
+\section{Conclusions}
+
+So what is the punchline, does it work or not? Do you recommend doing this
+for others?
+
+\bibliographystyle{acmdoi}
+\bibliography{template}
+
+\clearpage
+\appendix
+
+\section{Code}
+
+\begin{verbatim}
+# this is just the verbatim environment, really should use
+# a proper code environement
+
+class profile::base_linux {
+
+  $linux_sw_pkg = hiera('base_linux::linux_sw_pkg')
+
+# careful when configuring ntp to avoid misuse (opening for DDOS)
+
+  class { 'ntp':
+    servers   => [ 'ntp.hig.no' ],
+    restrict  => [
+      'default kod nomodify notrap nopeer noquery',
+      '-6 default kod nomodify notrap nopeer noquery',
+    ],
+  }
+  class { 'timezone':
+    timezone => 'Europe/Oslo',
+  }
+
+  package { $linux_sw_pkg:
+    ensure => latest,
+  }
+
+}
+\end{verbatim}
+
+\end{document}
