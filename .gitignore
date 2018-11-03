@@ -8,6 +8,9 @@ modules/
 *.toc
 _minted*
 *.pyg
+*.brf
+*.bbl
+*.blg
 
 
 # ignore heat env file
