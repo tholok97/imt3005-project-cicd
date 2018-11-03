@@ -152,7 +152,65 @@ This repository contains the Vagrant environment I used to develop for this proj
 
 \section{Results and discussion}
 
-TBA
+\subsection{OpenStack Heat stack}
+
+A core part of this project was having the infrastructure completely defined in code, so creating the stack was key. I based my infrastructure on IaC-Heat-cr, so creating the initial setup was went quite quickly. What I've needed to change from that stack was to reduce it down to three machines, make it use my own control-repo instead of contro-repo-cr and to inject some ssh keys through the bootscripts ran at stack creation.
+\\
+I decided to have the infrastructure definition in the same repository as the control-repo for simplicity. This proved to be beneficial as the infrastructure definition and control-repo always were in-sync. A side-effect is that r10k deploys the infrastructure definition together with the roles and profiles, which seems a little dirty. 
+
+\subsection{Beaker}
+
+Beaker proved to be more difficult to work with than expected. The intial goal was to have my whole control-repo tested through Beaker, but this proved to be a difficult task inside of Skyhigh. 
+
+\subsubsection{The Beaker-openstack plugin}
+
+The most common way to run Beaker seems to be using Vagrant with VirtualBox. This was what I initially planned on doing, but it turns out Skyhigh instances do not support hardware virtualization. VirtualBox running on a system without hardware virtualization is not a pleasant experience, as virtual machines must be 32-bit, and creation and deletion will be very slow. I abandoned VirtualBox for what in principle is a much better solution anyways: using Skyhigh itself as the hyporvisor for Beaker.
+
+In concept Beaker using Skyhigh for it's SUTs is a good idea. You could run your functional tests on the exact same images as the production systems are using. You could even provision them the exact same way as the production systems as you have access to the bootscripts for the intances in the stack. The issue is that to do this you are dependant on a plugin, and although there is a Beaker-openstack plugin, it is experimental and does not seem stable. First of all it does not immidiately seem to support OpenStack Keystone version 3, which is what Skyhigh seems to be using. Authenticating with Keystone version 2 gives 404 responses, and the top-level API call indicates it is depracted. Looking into the code for the library it does mention Keystone version 3 though, but it is using it in a very strange way. The following snippet is from the part of the library that is causing issues:
+
+\begin{minted}[firstnumber=48,fontsize=\tiny,linenos,breaklines]{Ruby}
+      # Keystone version 3 requires users and projects to be scoped
+      if @credentials[:openstack_auth_url].include?('/v3/')
+        @credentials[:openstack_user_domain]    = @options[:openstack_user_domain] || 'Default'
+        @credentials[:openstack_project_domain] = @options[:openstack_project_domain] || 'Default'
+      end
+
+      @compute_client ||= Fog::Compute.new(@credentials)
+\end{minted}
+
+Line 48 to 52 seems like a temporary solution, as it forces you to use "Default" domain when authenticating. The domain Skyhigh is expecting is "NTNU", so this might be part of the issue. Line 54 is where the library completely fails. There is a bug from inside the function call, which is a poorly documented call to another library, so I did not spend time debugging it.
+
+\subsubsection{Problem 1: Issues with the documentation}
+
+While working with Beaker I discovered several issues in the documentation. This seems strange, as the project appears to be well maintained. The biggest bug I found was in what might be the most important piece of documentatino of all: the "getting started" tutorial. Following the tutorial step by step rewards you with a big error message in the final command, which is not very inviting. The bug was not easy to fix either. It turns out the tutorial uses functionality from Beaker version 3 which has been completely revised for Beaker 4. The issue was with installation of Beaker on the SUTs. The tutorial used a function that not only no longer exists in Beaker, but that has been moved to a separate plugin and revised. This meant that before I could even run a Beaker test I had to learn one of it's plugins.
+\\
+The core Beaker project seems well documented, but trying to figure out any of the hyporvisor plugins from their documentation proved to be very difficult
+
+\subsection{Jenkins}
+\subsubsection{JCasC}
+\subsubsection{Job DSL}
+\subsection{Test pipelines}
+\subsubsection{Control-repo}
+\subsubsection{gossinbackup}
+\subsubsection{application} % TODO :1
+% \subsection{Vagrant-vm} % include discurrsion on this?
+
+
+
+% WHAT TO TALK ABOUT
+% - Stack
+% - Beaker
+%   - configuration
+%   - 
+% - JCasC
+%   - configuration
+%   - 
+% tests:
+%   - control-repo
+%   - control-repo
+%   - gossinbackup
+
+
 
 %This is the longest chapter, feel free to include some figures. Include
 %discussion of all problems you have encountered.
@@ -180,6 +238,10 @@ Currently the Puppet master has ssh access to both of the other machines. This i
 \subsection{Concerns around defining Jenkins as Code}
 
 Keeping all test definitions under version control means that an attacker with access to my repositories could see everything I test for, and more importantly, everything I \textbf{don't} test for. This is a consequence of having everything defined as code, and makes securing the repositories even more important. This issue is somewhat mitigated by the fact that the control-repo only contains "seed jobs". The actual test definitions are in each individual repository in the form of a "Jenkinsfile".
+
+\subsection{Infratructure defined in control-repo}
+
+% r10k places infrastructure definion on master.... talk about taht 
 
 
 %Provide a brief security analysis. Are you opening any new attack vectors? What
