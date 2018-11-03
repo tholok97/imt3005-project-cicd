@@ -7,7 +7,7 @@
 
 \maketitle
 
-\abstract{TBA}
+\abstract{CI/CD is high-level term that is hard to grasp without practical examples. In this report I will put forward my own experiences from trying to set up a Jenkins CI/CD pipline running in OpenStack using Beaker and Vagrant.}
 
 \thispagestyle{empty}
 
@@ -21,9 +21,9 @@
 
 \section{Introduction}
 
-The original goal of this project was to experiment with CI/CD using Jenkins and Beaker. 
+The original goal of this project was to experiment with CI/CD using Jenkins and Beaker. As a vessel for achieving this goal I decided to try and create an infrastructure with a Puppet Master, a Jenkins server and an application server, where changes to the infrastructure were run through a CI/CD pipeline on the Jenkins server. The whole infrastructure should be completely defined in code, such that all that is needed to bring up a copy is some environment-dependant yaml files and a \mintinline{bash}{openstack create} command.
 
-I'm trying to accomplish an infrastructure with a Puppet Master, a Jenkins server and an application server that runs CI/CD on any changes made, and ultimaltely deploys them into production.
+A lot of the work done during the project is in research, and I will try and share what I have learned during the project in this report. 
 
 %This is a short template you can use for your project report. Feel free to
 %make your own modifications to the structure. 
@@ -53,7 +53,23 @@ I'm trying to accomplish an infrastructure with a Puppet Master, a Jenkins serve
 %Describe what you will do in the introduction chapter (What are the goals of
 %you project?).
 
-\section{Background technology}
+\section{Background technology and terms}
+
+\subsection{CI/CD}
+
+As the whole project is focused around CI/CD I feel it's appropriate to present the definition of the term I've been using during the project. The term refers to the combined practise of "Continous Integration" and "Continous Delivery". Our course book refers to Martin Fowler for definitions of these terms, so I will as well.
+
+\subsubsection{Continous Integration}
+
+%CITATION https://martinfowler.com/articles/continuousIntegration.html
+
+Continuous Integration is a software development practice where members of a team integrate their work frequently, usually each person integrates at least daily - leading to multiple integrations per day. Each integration is verified by an automated build (including test) to detect integration errors as quickly as possible. Many teams find that this approach leads to significantly reduced integration problems and allows a team to develop cohesive software more rapidly.
+
+\subsubsection{Continous Delivery}
+
+%CITATION https://martinfowler.com/bliki/ContinuousDelivery.html
+
+Continuous Delivery is a software development discipline where you build software in such a way that the software can be released to production at any time.
 
 \subsection{Beaker}
 
@@ -86,7 +102,16 @@ Jenkins Configuration as Code, or JCasC, is a Jenkins plugin that seeks to repla
 
 \section{Survey of similar projects}
 
-TBA
+\subsection{PSICK}
+
+"Puppet Systems Infrastructure Construction Kit", or "PSICK", is a tool for generating Puppet control-repo 
+
+\subsection{Onceover}
+
+
+\subsection{Acceptance testing at OpenStack}
+
+
 
 %There are always someone who has done what you are going to do, or
 %something related. Breifly describe at least one or two similar projects,
