@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('puppet parser validate') {
       agent {
-        // using dockerfile defined
+        // using dockerfile defined in jenkins_agents
         dockerfile {
           dir 'jenkins_agents/syntax_agent/'
         }
@@ -14,7 +14,7 @@ pipeline {
     }
     stage('puppet-lint') {
       agent {
-        // using dockerfile defined
+        // using dockerfile defined in jenkins_agents
         dockerfile {
           dir 'jenkins_agents/syntax_agent/'
         }
