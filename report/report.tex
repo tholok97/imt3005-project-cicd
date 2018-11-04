@@ -1,7 +1,7 @@
 \input{preamble.tex}
 
 \title{CI/CD with Jenkins and Beaker}
-\author{Thomas Løkkeborg} % TODO add studnr
+\author{Thomas Løkkeborg, 473157} % TODO add studnr
 
 \begin{document}
 
@@ -245,6 +245,9 @@ jobs:
 \end{minted}
 
 Line 1 defines a list of jobs, and line 5 to 18 is a "seed job" that sets up a pipline for the control-repo. The "credentials" call on line 12 refers to a private ssh key stored using the credentials plugin. See the security discussion.
+\\
+\\
+An issue worth mentioning is how to invoke these jobs. Continuous Integration is based around integrating each change you make into the main trunk, so triggering a job run on each push to it's repository is desired. This is not possible in Skyhigh, as the floating IP addresses you are given are internal to NTNU's network. Therefore I've been manually triggering job runs during this project. I could also have had the jobs run on an intervall, but as the course book\cite{coursebook} states this is not good enough. For proper CI you would set up webhooks between Github (or whatever version control host you use) and the Jenkins server. 
 
 \subsection{Test pipelines}
 
@@ -350,9 +353,9 @@ pipeline {
 }
 \end{minted}
 
-As indicated in the snippet, the acceptance tests could either run as standard beaker test runs, or by using the Vagrant solution I explained earlier. The first solution works, but not in Skyhigh, and the latter is not implemented.
+As indicated in the snippet, the acceptance tests could either run as standard beaker test runs, or by using the Vagrant solution I explain here: \ref{beakerinsidevagrantexample}. The first solution works, but not in Skyhigh, and the latter is not implemented.
 
-\subsubsection{application} % TODO :1
+\subsubsection{application}
 
 Because of time-constraints I did not get to implement any kind of CI/CD application pipeline. I did look into how I would go forward with doing it though, and set up a pipeline through the web UI that ultimately deployed a Golang binary to the application server following a tutorial\cite{buidonjenkinsandpublishwithpipelines}. Here are the steps I would take to implement this in the control-repo:
 
@@ -402,7 +405,7 @@ Handling secrets was not a focus during this project, so I have chosen some dodg
 JCasC lets you define user passwords in plaintext in the yaml configuration file, so I chose to do that for simplicity. This is an obvious security flaw that could be fixed by the below list of solutions.
 \\
 \\
-The above problems are way smaller than the greatest sin I did during this project though, which was to include a private key in plaintext in the control-repo. The Jenkins server needs to authenticate with Github to clone down repositories for testing, and I did not find any straight-forward way to give Jenkins a private key for this, so I ended up just including the key as part it's JCasC configuration. The key is a "Github deploy key", however, so an attacker with access to this key would only have \textbf{read} access to \textbf{the repository the key was linked to}. There are a couple solutions to this issue:
+The above problems are way smaller than the greatest sin I did during this project though, which was to include a private key in plaintext in the control-repo. The Jenkins server needs to authenticate with Github to clone down repositories for testing, and I did not find any straight-forward way to give Jenkins a private key for this, so I ended up just including the key as part it's JCasC configuration. The key is a "Github deploy key"\cite{githubdeploykeyarticle}, however, so an attacker with access to this key would only have \textbf{read} access to \textbf{the repository the key was linked to}. There are a couple solutions to this issue:
 \\
 \\
 \begin{itemize}  
@@ -423,15 +426,19 @@ Keeping all test definitions under version control means that an attacker with a
 
 I chose to have the infrastruce definition in the control-repo, which means r10k "deploys" this code as well to the Puppet master. This means that with access to the Puppet master an attacker could find security holes in my setup. 
 
-% r10k places infrastructure definion on master.... talk about taht 
-
-
 %Provide a brief security analysis. Are you opening any new attack vectors? What
 %are the risks? Are there sensitive data? Are clients and servers mutually
 %authenticating each other? etc etc
 
 \section{Conclusions}
 
+My original goal was to experiment with CI/CD, and I feel I have accomplished that. I am left with a technical understanding of how CI/CD could be implemented using the technologies I have explored. Continuous Integration in my project exists in the form of the pipeline jobs running tests on changes made (although running them automatically was not possible, as I explained). With the features I explored, but didn't implement, I would feel pretty saffe inviting others to work on the codebase as well. Continuous Delivery is somewhat achieved by the fact that I steered away from experimenting though the CI/CD piplines, but instead did rough manual experimentation and testing before commiting to production.
+\\
+\\
+Beaker turned out to be difficult to work with in Skyhigh. Most examples are of using Beaker with Vagrant and VirtualBox, which is not possible in Skyhigh, so most of the time spent on Beaker was getting it to even run. The method I arrived at does work though, although it has it's drawbacks, and I did not have time to fully implement it.
+\\
+\\
+As for the infrastructure I wanted to set up, I am not finished. I am convinced I would be able to do it with more time however, and I have tried to lay out how I would achieve this in this report. What is implemented does meet my \mintinline{bash}{openstack create} requirement though. Following this requirement has slowed me down quite a bit, but in return I have a greater understanding and respect for how difficult it can be to define everything in code, especially with regards to secrets.
 
 %* Didn't quite reach my goal
 %* Working with Beaker outside of Virtualbox is a hassle
@@ -440,16 +447,16 @@ I chose to have the infrastruce definition in the control-repo, which means r10k
 %* Testing pipelines are great
 
 
-TBA
-
 %So what is the punchline, does it work or not? Do you recommend doing this
 %for others?
+
+\clearpage % make references start on own page
 
 \nocite{*}
 \bibliographystyle{acmdoi}
 \bibliography{report}
 
-\clearpage
+\clearpage % make appendixstart on own page
 \appendix
 
 \section{Code}

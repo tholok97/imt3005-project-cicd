@@ -4,19 +4,24 @@ Based on template by lecturer.
 
 To duplicate my LaTeX installation:
 
-```
+```basH
 apt install texlive-latex-extra
 apt install python-pygments
 ```
 
-I use the script `./c.sh` to produce the pdf.
+I use the script `./c.sh` to produce the pdf. I use this mapping to invoke script from inside vim:
+
+```vim
+nnoremap ø :!./c.sh<cr>
+```
 
 ## TODO
 
-- [ ] Citations
-  - [ ] Setting up bibtex file
-  - [ ] Citations in tex file
-  - [ ] Proof-read for missing citations
-- [ ] Add appendices
+- [x] Citations
+  - [x] Setting up bibtex file
+  - [x] Citations in tex file
+- [x] Add appendices
 - [ ] Proof-reading
-- [ ] write about webhooks in skyhigh
+  -x[ ] Proof-read for missing citations
+- [x] write about webhooks in skyhigh
+- [ ] Write about how I wrote the report?
