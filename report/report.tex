@@ -310,8 +310,6 @@ pipeline {
 }
 \end{minted}
 
-
-
 % TODO: actually write that section
 
 \subsubsection{gossinbackup}
@@ -355,9 +353,9 @@ pipeline {
 
 As indicated in the snippet, the acceptance tests could either run as standard beaker test runs, or by using the Vagrant solution I explain here: \ref{beakerinsidevagrantexample}. The first solution works, but not in Skyhigh, and the latter is not implemented.
 
-\subsubsection{application}
+\subsubsection{application} \label{applicationpipeline}
 
-Because of time-constraints I did not get to implement any kind of CI/CD application pipeline. I did look into how I would go forward with doing it though, and set up a pipeline through the web UI that ultimately deployed a Golang binary to the application server following a tutorial\cite{buidonjenkinsandpublishwithpipelines}. Here are the steps I would take to implement this in the control-repo:
+Because of time-constraints I did not get to implement any kind of CI/CD application pipeline. I did look into how I would go forward with doing it though, and set up a pipeline through the web UI that ultimately deployed a Golang\cite{golang} binary to the application server following a tutorial\cite{buidonjenkinsandpublishwithpipelines}. Here are the steps I would take to implement this in the control-repo:
 
 \begin{enumerate}
 \item Write a basic Golang application with a few tests. This is \textbf{trivial} to do in Golang.
@@ -366,12 +364,22 @@ Because of time-constraints I did not get to implement any kind of CI/CD applica
 \item Deploy to the application server using the same basic ssh method used in the control-repo pipeline.
 \end{enumerate}
 
-\subsection{Vagrant-vm}
+\subsection{imt3005-vagrant-vm}
 
 Although this was not the focus of this project, I will briefly discuss the Vagrant environment I created to work with this course \cite{tholok97vagrantvm}. Currently it includes all the tools needed, and I believe it is general enough that anyone can clone it and start using it themselves. Environment-specific configuration is done through a yaml file, and all the "data" of the environment is shared with the underlying host, so the environment is completely disposable. It gave me a chance to experiment freely, as I could simply rebuild it any time I messed up.
 \\
 \\
 Relevant to this project is the fact that since I've done all of my work inside this environment, it should be possible for anyone to clone it down and get the exact same setup that I've used. This one solution to the "it works on my machine" issue, as everyone will have the exact same machine. In addition it's fully possible to make this environment mirror that found in production. I have also managed to successfully set up Vagrant to provision it's VM in Skyhigh, which allows it to use the exact same image as production does. You could take this even further by having Vagrant apply the same boot script to it as well.
+
+\subsection{Jenkins Docker agents}
+
+Jenkins can run it's tests within agents, and with the Docker plugin installed these agents can be Docker containers. I found this very useful as each repository can define it's own agent along with it's Jenkinsfile. This way only the seed job is defined by Jenkins itself, with the rest being defined in the repository the tests concern. For the control-repo I created one such agent \cite{imt3005projectcicd}, which has puppet agent and puppet-lint installed to be able to run \mintinline{bash}{puppet parser validate} and \mintinline{bash}{puppet-lint}. If I later decide to add other tests, say a yaml linting tool, I don't have to touch Jenkins itself, only code within the control-repo.
+\\
+\\
+I have Jenkins running in a Docker container, and to avoid "Docker-in-Docker" problems I have it connected to the underlying Docker host for creation of containers. \cite{dockerindockerarticle}
+\\
+\\
+I decided on a directory structure where additional agents can be added with ease. For example the control-repo would need an agent with Vagrant installed for the acceptance testing method I discussed here: \ref{beakerinsidevagrantexplanation}, and the application (discussed here: \ref{applicationpipeline}) would have an agent with Golang tools installed. See my control-repo \cite{imt3005projectcicd} for an example of this directory structure.
 
 
 

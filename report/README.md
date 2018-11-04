@@ -22,6 +22,7 @@ nnoremap ø :!./c.sh<cr>
   - [x] Citations in tex file
 - [x] Add appendices
 - [ ] Proof-reading
-  -x[ ] Proof-read for missing citations
+  - [x] Proof-read for missing citations
 - [x] write about webhooks in Skyhigh
 - [ ] Write about how I wrote the report?
+- [ ] Make citations consitent with regards to space or no space
