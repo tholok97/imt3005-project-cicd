@@ -1,18 +1,14 @@
 # JCasC configuration file. Heavily inspired by https://github.com/Praqma/praqma-jenkins-casc
-
-#configuration-as-code:
-#  deprecation: warn
-
 jenkins:
   systemMessage: "Greetings friend! I am a system message configured through JCasC"
-  agentProtocols: 
-    - "JNLP4-connect" 
+  agentProtocols:
+    - "JNLP4-connect"
   securityRealm:
     local:
       allowsSignup: false
       users:
-       - id: demoAdmin
-         password: koko
+       - id: insecureAdmin
+         password: insecurePassword
   authorizationStrategy:
     globalMatrix:
       grantedPermissions:
@@ -25,11 +21,6 @@ credentials:
   system:
     domainCredentials:
       - credentials:
-          - usernamePassword:
-              scope:    SYSTEM
-              id:       github-user
-              username: ReleasePraqma
-              password: koko
           - basicSSHUserPrivateKey:
               scope: GLOBAL  # this has to be global for scm to work in seed jobs
               id: tholok97_imt3005-project-cicd_deploy-key
@@ -37,7 +28,12 @@ credentials:
               passphrase:  ""
               description: "ssh private key used to connect ssh slaves"
               privateKeySource:
-                directEntry: # The key 'agent_private_key' resolved from a docker secret defined in docker-compose.yml
+                directEntry:
+                  # YES. Including a private key in plaintext in VCS is horrible, but did it
+                  # for simplicity. See my report for a discussion for possible solutions
+                  #
+                  # Note that is a Github deploy key, so it only has READ access to ONE
+                  # repository, which I'll make public eventually anyways.
                   privateKey: |
                     -----BEGIN RSA PRIVATE KEY-----
                     MIIEowIBAAKCAQEA2fJO47pEqoQkXvoHqyFv5sEfEzENdEAD246rwqGqvfj6TIzA
@@ -66,10 +62,12 @@ credentials:
                     Xk9geLe6jva+NwIMAnXqG+JIsI5DX59dHTzHO2NpD8Adc34ht1YsleqwF2TXO9Fq
                     ZkF1yeeuK1gzS3B59a/iHSUGuqy2+A+Ixvke9hsKcCFo3KpRR4bF
                     -----END RSA PRIVATE KEY-----
-                  
-jobs: 
+
+jobs:
 # taken from https://github.com/jenkinsci/configuration-as-code-plugin/blob/master/docs/seed-jobs.md
 # and https://marcesher.com/2016/08/04/jenkins-as-code-comparing-job-dsl-and-pipelines/
+#
+# The following three jobs are just here eto show some examples of job dsl configured through JCasC
   - script: |
       def myJob = freeStyleJob('SimpleJob')
       myJob.with {
@@ -103,7 +101,7 @@ jobs:
                           }
                       }
                   }
-# The below job sets up a pipeline job for my gossinbackup module. The Jenkinsfile of that module is used. 
+# The below job sets up a pipeline job for my gossinbackup module. The Jenkinsfile of that module is used.
 # Added as a demonstration that jobs work
 # Reference used: https://jenkinsci.github.io/job-dsl-plugin/#path/pipelineJob
   - script: |
@@ -116,7 +114,6 @@ jobs:
                       }
                   }
       }
-# WIP
 # sets up control-repo testing
   - script: |
       pipelineJob("control repo") {
@@ -138,7 +135,7 @@ jobs:
 #  - url: https://raw.githubusercontent.com/Praqma/memory-map-plugin/master/jenkins-pipeline/pipeline.groovy #memory map
 #  - url: https://raw.githubusercontent.com/Praqma/codesonar-plugin/master/jenkins-pipeline/pipeline.groovy #codesonar
 #  - url: https://raw.githubusercontent.com/Praqma/pretested-integration-plugin/master/jenkins-pipeline/pipeline.groovy #pretested integration
-#  - url: https://raw.githubusercontent.com/Praqma/ClearCaseUCMPlugin/master/jenkins-pipeline/pipeline.groovy #ccucm 
+#  - url: https://raw.githubusercontent.com/Praqma/ClearCaseUCMPlugin/master/jenkins-pipeline/pipeline.groovy #ccucm
 #  - url: https://raw.githubusercontent.com/Praqma/Praqmatic-Automated-Changelog/master/jenkins-pipeline/pipeline.groovy #pac
 #  - url: https://raw.githubusercontent.com/Praqma/PlusBump/rebirth/jenkins-pipeline/pipeline.groovy #plusbump
 #  - url: https://raw.githubusercontent.com/Praqma/job-dsl-collection/master/web-pipeline-dsl/web_pipeline_dsl.groovy #websites
@@ -153,84 +150,3 @@ tool:
 security:
   remotingCLI:
     enabled: false
-
-unclassified:
-  location:
-    url: https://jenkins.praqma.cloud
-    adminAddress: support@praqma.net  
-  warnings:
-    parsers:
-      - name: "LinkChecker CSV (Jekyll flavor)"
-        linkName: "Jekyll LinkChecker"
-        trendName: "LinkChecker CSV (Jekyll flavor)"
-        regexp: "([^\\n;]*?(?=;))?;([^;]*?(?=;))?;([^;]*?(?=;))?;([^;]*?(?=;))?;([^;]*?(?=;))?;([^;]*?(?=;))?;([^;]*?(?=;))?;([^;]*?(?=;))?;([^;]*?(?=;))?;([^;]*?(?=;))?;([^;]*?(?=;))?;([^;]*?(?=;))?;([^;]*?(?=;))?;([^;]*?(?=;))?;([^;]*?(?=;))?;([^;]*?(?=;))?;([^\\n]*)"
-        script: |
-          import hudson.plugins.analysis.util.model.Priority
-          import hudson.plugins.warnings.parser.Warning
-
-          def obj = [
-                  url          : matcher.group(1),
-                  parentUrl    : matcher.group(2),
-                  baseRef      : matcher.group(3),
-                  result       : matcher.group(4),
-                  warningString: matcher.group(5),
-                  infoString   : matcher.group(6),
-                  valid        : matcher.group(7),
-                  fullUrl      : matcher.group(8),
-                  line         : matcher.group(9),
-                  column       : matcher.group(10),
-                  name         : matcher.group(11),
-                  dlTime       : matcher.group(12),
-                  dlSize       : matcher.group(13),
-                  checkTime    : matcher.group(14),
-                  cached       : matcher.group(15),
-                  level        : matcher.group(16),
-                  modified     : matcher.group(17)
-          ]
-
-          String jekyllTarget = "_site"
-          String defaultIndex = "index.html"
-          String source = obj.parentUrl
-
-          def line = obj.line.toInteger()
-          def type = obj.level
-          def category = obj.result
-
-          message = "$obj.fullUrl: ($obj.result) $obj.warningString - $obj.infoString"
-
-          def priority = null
-          if ( category.equalsIgnoreCase("ignored"))
-             if (obj.warningString != null && obj.warningString != "" ){
-                priority = Priority.HIGH
-                category = "warning"
-             }  else
-                priority = Priority.LOW
-          else
-             priority = Priority.NORMAL
-
-          if (obj.valid.equalsIgnoreCase("false"))
-              priority = Priority.HIGH
-            
-          return new Warning(source, line, type, category, message, priority)
-        example: ""        
-  globalLibraries:
-    libraries:
-      - name: "praqma-shared@master"
-        implicit: true
-        defaultVersion: "master"
-        retriever:
-          modernSCM:
-            scm:
-              git:
-                remote: "https://github.com/Praqma/shared-pipeline.git"
-#plugins:
-#  required:
-#    credentials: 2.1.17
-#    git: 3.9.0
-#    ssh-slaves: 1.26
-#    warnings: 4.66
-#    matrix-auth: 2.2
-#    job-dsl: 1.68
-#    workflow-aggregator: 2.5
-#    timestamper: 1.8.9
-
