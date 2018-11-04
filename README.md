@@ -35,9 +35,16 @@ imt3005-project-cicd/
 └── hiera.yaml                            # Hiera's configuration file. The Hiera hierarchy is defined here.
 ```
 
+## Related repositories
+
+Other repositories involved with this project. They are discussed in my report.
+
+* <https://github.com/tholok97/imt3005-vagrant-vm>: A Vagrant environment I created for working with the course. It includes all the required tools to work with this repository.
+* <https://github.com/tholok97/gossinbackup>: A simple Puppet module created in an earlier lab. I wrote simple acceptance tests for it a part of this project.
+
 ## Usage
 
-I made [this Vagrant machine](https://github.com/tholok97/imt3005-vagrant-vm) for working with the project. It includes all the tools needed to work with the repo. You do however need access to an [Openstack](https://www.openstack.org/) cloud environment to deploy the stack in.
+The Vagrant environmet described in the above section includes everything you need in terms of tools. You do however need access to an [Openstack](https://www.openstack.org/) cloud environment to deploy the stack in.
 
 ### To create the stack
 
