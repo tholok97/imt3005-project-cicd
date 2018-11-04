@@ -1,7 +1,13 @@
 parameters:
-  key_name: youropenstackkeyhere
+  key_name: your_openstack_keypair_name_here
   github_ssh_private_key: |
-    -----BEGIN RSA PRIVATE KEY-----
-    yourgithubkeyhere
-    -----END RSA PRIVATE KEY-----
+    the ssh key used by r10k to clone the repo
+
+  jenkins_ssh_public_key: |
+    the public key part of a public/private key pair used by the 
+    Jenkins server to ssh into Puppet master for deploying
+
+  jenkins_ssh_private_key: |
+    the private key part of a public/private key pair used by the 
+    Jenkins server to ssh into Puppet master for deploying
 
