@@ -459,9 +459,7 @@ As for the infrastructure I wanted to set up, I am not finished. I am convinced 
 \clearpage % make appendixstart on own page
 \appendix
 
-\section{Code}
-
-\subsection{Beaker inside Vagrant example} \label{beakerinsidevagrantexample}
+\section{Beaker inside Vagrant example} \label{beakerinsidevagrantexample}
 
 \begin{minted}[fontsize=\tiny,linenos,breaklines]{ruby}
 # -*- mode: ruby -*-
@@ -547,9 +545,9 @@ SHELL
 end
 \end{minted}
 
-\subsection{Beaker tests for my gossinbackup module} \label{gossinbackuptests}
+\section{Beaker tests for my gossinbackup module} \label{gossinbackuptests}
 
-\subsubsection{spec\_helper\_acceptance.rb}
+\subsection{spec\_helper\_acceptance.rb}
 
 \begin{minted}[fontsize=\tiny,linenos,breaklines]{ruby}
 require 'beaker-pe'
@@ -579,7 +577,7 @@ RSpec.configure do |c|
 end
 \end{minted}
 
-\subsubsection{class\_spec.rb}
+\subsection{class\_spec.rb}
 
 \begin{minted}[fontsize=\tiny,linenos,breaklines]{ruby}
 require 'spec_helper_acceptance'
@@ -607,7 +605,7 @@ describe 'gossinbackup module' do
 end
 \end{minted}
 
-\subsection{Jenkins.yaml} \label{jenkinsyaml}
+\section{Jenkins.yaml} \label{jenkinsyaml}
 
 \begin{minted}[fontsize=\tiny,linenos,breaklines]{ruby}
 # JCasC configuration file. Heavily inspired by https://github.com/Praqma/praqma-jenkins-casc
