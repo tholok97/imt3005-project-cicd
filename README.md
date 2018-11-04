@@ -44,7 +44,7 @@ I made [this Vagrant machine](https://github.com/tholok97/imt3005-vagrant-vm) fo
 1. (Either fork this repository and make r10k clone your forked repository, or alter the bootscript of manager to pull using HTTPS, not SSH. This is because you need my private Github key to clone the repository with ssh. This is an unfortunate barrier of entry, but I have not had time to fix it.)
 1. Provide your own environment file based on `infrastructure/topology_env_example.yaml`. (e.g. `cp infrastructure/topology_env_example.yaml infrastructure/topology_env.yaml`, and fill it with your environment specific settings).
 1. Create the stack defined in `infrastructure/topology.yaml`, and provide the environment file you made eariler. (e.g. `openstack create -t infrastructure/topology.yaml -e infrastructure/topology_env.yaml cicd_stack`)
-1. Profit! The stack should configure itself. Find the floating IP address of the Jenkins server and browse to it on port 8080. When the stack is fully provisioned you will se a Jenkins server running here with a few jobs. The admin username password is insecureAdmin/insecurePassword.
+1. Profit! The stack should configure itself. Find the floating IP address of the Jenkins server and browse to it on port 8080. When the stack is fully provisioned you will se a Jenkins server running here with a few jobs. The admin username/password is insecureAdmin/insecurePassword.
 
 ## TODO
 
