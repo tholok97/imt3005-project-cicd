@@ -21,7 +21,7 @@
 
 \section{Introduction}
 
-The original goal of this project was to experiment with CI/CD using Jenkins and Beaker. As a vessel for achieving this goal I decided to try and create an infrastructure with a Puppet Master, a Jenkins server and an application server, where changes to the infrastructure were run through a CI/CD pipeline on the Jenkins server. The whole infrastructure should be completely defined in code, such that all that is needed to bring up a copy is some environment-dependant yaml files and a \mintinline{bash}{openstack create} command.
+The original Dag Langmyrs \LaTeX book \cite{Langmyr:03} goal of this project was to experiment with CI/CD using Jenkins and Beaker. As a vessel for achieving this goal I decided to try and create an infrastructure with a Puppet Master, a Jenkins server and an application server, where changes to the infrastructure were run through a CI/CD pipeline on the Jenkins server. The whole infrastructure should be completely defined in code, such that all that is needed to bring up a copy is some environment-dependant yaml files and a \mintinline{bash}{openstack create} command.
 
 The components of the infrastructure that I want to test are the control-repo and the application running on the application server.
 
@@ -422,6 +422,7 @@ TBA
 %So what is the punchline, does it work or not? Do you recommend doing this
 %for others?
 
+\nocite{*}
 \bibliographystyle{acmdoi}
 \bibliography{template}
 
