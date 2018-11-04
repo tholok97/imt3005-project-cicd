@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The goal of the project is to experiment with CI/CD using OpenStack, Jenkins and Beaker. I'm trying to accomplish an infrastructure with a Puppet Master, a Jenkins server and an application server that runs CI/CD on any changes made, and ultimaltely deploys them into production.  
+The goal of the project is to experiment with CI/CD using OpenStack, Jenkins and Beaker. I'm trying to accomplish an infrastructure with a Puppet Master, a Jenkins server and an application server that runs CI/CD on any changes made, and ultimately deploys them into production.  
 
 Please see [the report](./report) for more details about the project itself.
 
@@ -44,14 +44,14 @@ Other repositories involved with this project. They are discussed in my report.
 
 ## Usage
 
-The Vagrant environmet described in the above section includes everything you need in terms of tools. You do however need access to an [Openstack](https://www.openstack.org/) cloud environment to deploy the stack in.
+The Vagrant environment described in the above section includes everything you need in terms of tools. You do however need access to an [Openstack](https://www.openstack.org/) cloud environment to deploy the stack in.
 
 ### To create the stack
 
-1. (Either fork this repository and make r10k clone your forked repository, or alter the bootscript of manager to pull using HTTPS, not SSH. This is because you need my private Github key to clone the repository with ssh. This is an unfortunate barrier of entry, but I have not had time to fix it.)
+1. (Either fork this repository and make r10k clone your forked repository, or alter the boot script of manager to pull using HTTPS, not SSH. This is because you need my private Github key to clone the repository with ssh. This is an unfortunate barrier of entry, but I have not had time to fix it.)
 1. Provide your own environment file based on `infrastructure/topology_env_example.yaml`. (e.g. `cp infrastructure/topology_env_example.yaml infrastructure/topology_env.yaml`, and fill it with your environment specific settings).
-1. Create the stack defined in `infrastructure/topology.yaml`, and provide the environment file you made eariler. (e.g. `openstack create -t infrastructure/topology.yaml -e infrastructure/topology_env.yaml cicd_stack`)
-1. Profit! The stack should configure itself. Find the floating IP address of the Jenkins server and browse to it on port 8080. When the stack is fully provisioned you will se a Jenkins server running here with a few jobs. The admin username/password is insecureAdmin/insecurePassword.
+1. Create the stack defined in `infrastructure/topology.yaml`, and provide the environment file you made earlier. (e.g. `openstack create -t infrastructure/topology.yaml -e infrastructure/topology_env.yaml cicd_stack`)
+1. Profit! The stack should configure itself. Find the floating IP address of the Jenkins server and browse to it on port 8080. When the stack is fully provisioned you will see a Jenkins server running here with a few jobs. The admin username/password is insecureAdmin/insecurePassword.
 
 ## TODO
 
@@ -59,7 +59,7 @@ The Vagrant environmet described in the above section includes everything you ne
 
 * Configure Blue Ocean plugin for Jenkins.
 * Include security groups in infrastructure definition.
-* Separate out general installation in own bootscript (to be used with CI).
+* Separate out general installation in own boot script (to be used with CI).
 * Implement missing functionality described in report.
 
 ## References
@@ -73,7 +73,7 @@ Note that this is a subset of the references found in my report.
 * Article about testing of control-repos: <https://www.example42.com/2017/12/18/beaker_with_vagrant_and_docker/>
 * beaker-puppet docs: <https://www.rubydoc.info/gems/beaker-puppet>
 * Issue corresponding to some installation trouble I ran in to: <https://tickets.puppetlabs.com/browse/BKR-821>
-* Issue corersponding to some runtime trouble I ran in to: <https://tickets.puppetlabs.com/browse/BKR-1530>
+* Issue corresponding to some runtime trouble I ran in to: <https://tickets.puppetlabs.com/browse/BKR-1530>
 * Issue corresponding to an issue I had with a plugin: <https://github.com/puppetlabs/beaker-puppet_install_helper/issues/45>
 * Project that solves testing of control-repos: <https://github.com/dylanratcliffe/onceover#nodesets>
   * Article about above project: <https://puppet.com/blog/use-onceover-start-testing-rspec-puppet>
@@ -81,7 +81,7 @@ Note that this is a subset of the references found in my report.
 * Repo about testing OpenStack (Puppet): <https://github.com/openstack/puppet-openstack-integration>
 * Video about IaC testing: <https://puppet.com/resources/video/r-tyler-croy-of-jenkins-on-infrastructure-as-code-testing/thank-you>
 * PDF about Puppet testing with Jenkins: <http://iopscience.iop.org/article/10.1088/1742-6596/664/6/062059/pdf>
-* Control-repo on steriods: <https://github.com/example42/psick>
+* Control-repo on steroids: <https://github.com/example42/psick>
 * JCasC video: <https://www.youtube.com/watch?v=PAKWqRE0aTk&t=82s>
 * JCasC Docker image: <https://github.com/Praqma/jenkins4casc>
 * Handy article about JCasC: <https://automatingguy.com/2018/09/25/jenkins-configuration-as-code/>
@@ -97,11 +97,11 @@ Note that this is a subset of the references found in my report.
 * Job-DSL plugin pipeline reference: <https://jenkinsci.github.io/job-dsl-plugin/#path/pipelineJob>
 * (Very) good video about Beaker-rspec: <https://www.youtube.com/watch?v=jEJmUQOlaDg>
 * Article about functional testing with Vagrant, OpenStack and Beaker: <http://my1.fr/blog/puppet-module-functional-testing-with-vagrant-openstack-and-beaker/>
-  * The bootscript in the above article points to a file that looks like this: <https://github.com/openstack/puppet-keystone/blob/master/spec/acceptance/nodesets/nodepool-xenial.yml>. It defines a Beaker node with no hyporvisor, and seems to make beaker use the host machine as it's testing machine (Might do testing like this).
+  * The boot script in the above article points to a file that looks like this: <https://github.com/openstack/puppet-keystone/blob/master/spec/acceptance/nodesets/nodepool-xenial.yml>. It defines a Beaker node with no hypervisor, and seems to make beaker use the host machine as it's testing machine (Might do testing like this).
 * OpenStack article from 2015 talking about their transition to testing their Puppet modules with Beaker: <http://specs.openstack.org/openstack-infra/infra-specs/specs/puppet-module-functional-testing.html>
 * OpenStack development CI docs page: <https://docs.openstack.org/puppet-openstack-guide/latest/contributor/ci.html>
 * Thread about committing changes from Jenkins: <https://stackoverflow.com/questions/38769976/is-it-possible-to-git-merge-push-using-jenkins-pipeline>
-* Article about creating a continious deployment pipeline with Jenkins and Go (not well written, but it worked): <https://blog.couchbase.com/create-continuous-deployment-pipeline-golang-jenkins/>
+* Article about creating a continuous deployment pipeline with Jenkins and Go (not well written, but it worked): <https://blog.couchbase.com/create-continuous-deployment-pipeline-golang-jenkins/>
 * Example of Jenkinsfile for control-repo: <https://github.com/raj-andy1/control-repo/blob/production/Jenkinsfile>
 * Article about deployment over ssh from pipeline: <https://medium.com/@weblab_tech/how-to-publish-artifacts-in-jenkins-f021b17fde71>
 * Best-practises for pipeline-plugin: <https://www.cloudbees.com/blog/top-10-best-practices-jenkins-pipeline-plugin>

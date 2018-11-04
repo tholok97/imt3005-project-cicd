@@ -7,7 +7,7 @@
 
 \maketitle
 
-\abstract{CI/CD is high-level term that is hard to grasp without practical examples. In this report I will put forward my own experiences from trying to set up a Jenkins CI/CD pipline running in OpenStack using Beaker and Vagrant.}
+\abstract{CI/CD is high-level term that is hard to grasp without practical examples. In this report I will put forward my own experiences from trying to set up a Jenkins CI/CD pipeline running in OpenStack using Beaker and Vagrant.}
 
 \thispagestyle{empty}
 
@@ -21,7 +21,7 @@
 
 \section{Introduction}
 
-The original goal of this project was to experiment with CI/CD using Jenkins and Beaker. As a vessel for achieving this goal I decided to try and create an infrastructure with a Puppet Master, a Jenkins server and an application server, where changes to the infrastructure were run through a CI/CD pipeline on the Jenkins server. The whole infrastructure should be completely defined in code, such that all that is needed to bring up a copy is some environment-dependant yaml files and a \mintinline{bash}{openstack create} command.
+The original goal of this project was to experiment with CI/CD using Jenkins and Beaker. As a vessel for achieving this goal I decided to try and create an infrastructure with a Puppet Master, a Jenkins server and an application server, where changes to the infrastructure were run through a CI/CD pipeline on the Jenkins server. The whole infrastructure should be completely defined in code, such that all that is needed to bring up a copy is some environment-dependant "yaml" files and a \mintinline{bash}{openstack create} command.
 \\
 \\
 See \ref{listofwork} for a list of what I worked on during the project.
@@ -58,19 +58,19 @@ See \ref{listofwork} for a list of what I worked on during the project.
 
 \subsection{CI/CD}
 
-As the whole project is focused around CI/CD I feel it's appropriate to present the definition of the term I've been using during the project. The term refers to the combined practise of "Continous Integration" and "Continous Delivery". Our course book\cite{coursebook} refers to Martin Fowler for definitions of these terms, so I will as well.
+As the whole project is focused around CI/CD I feel it's appropriate to present the definition of the term I've been using during the project. The term refers to the combined practise of "Continuous Integration" and "Continuous Delivery". Our course book\cite{coursebook} refers to Martin Fowler for definitions of these terms, so I will as well.
 
-\subsubsection{Continous Integration}
+\subsubsection{Continuous Integration}
 
 \say{Continuous Integration is a software development practice where members of a team integrate their work frequently, usually each person integrates at least daily - leading to multiple integrations per day. Each integration is verified by an automated build (including test) to detect integration errors as quickly as possible. Many teams find that this approach leads to significantly reduced integration problems and allows a team to develop cohesive software more rapidly.}\cite{cidef}
 
-\subsubsection{Continous Delivery}
+\subsubsection{Continuous Delivery}
 
 \say{Continuous Delivery is a software development discipline where you build software in such a way that the software can be released to production at any time.}\cite{cddef}
 
 \subsection{Beaker}
 
-Beaker\cite{beakergithub} is a test harness focused on acceptance testing machines. The project is maintained by Puppetlabs themselves, and is widely used. Beaker abstracts away the underlying machines it is testing on by using the concept of SUTs, "Systems Under Test", so it can test for any kind of machine that is supported though plugins. The project consists of many parts, and the relevant ones for this project are "beaker-openstack"\cite{beakeropenstackgithub} and "beaker-vagrant"\cite{beakervagrantgithub}.
+Beaker\cite{beakergithub} is a test harness focused on acceptance testing machines. The project is maintained by Puppetlabs themselves, and is widely used. Beaker abstracts away the underlying machines it is testing on by using the concept of SUT's, "Systems Under Test", so it can test for any kind of machine that is supported though plugins. The project consists of many parts, and the relevant ones for this project are "beaker-openstack"\cite{beakeropenstackgithub} and "beaker-vagrant"\cite{beakervagrantgithub}.
 
 % NOT NEEDED?
 %\subsubsection{beaker-rspec}
@@ -79,7 +79,7 @@ Beaker\cite{beakergithub} is a test harness focused on acceptance testing machin
 
 \subsubsection{beaker-openstack}
 
-Beaker-openstack is meant to allow Beaker to use OpenStack as a provider of SUTs. This plugin is experimental, and the library code reflects that. I have not found any examples of people actually using this plugin.
+Beaker-openstack is meant to allow Beaker to use OpenStack as a provider of SUT's. This plugin is experimental, and the library code reflects that. I have not found any examples of people actually using this plugin.
 
 \subsubsection{beaker-vagrant}
 
@@ -87,7 +87,7 @@ Beaker-vagrant utilizes Vagrant to create and provision nodes. When using this p
 
 \subsection{Vagrant}
 
-Vagrant\cite{vagrantwebsite} is an Open-source automation tool for creating and provisioning virtual machines. It was created to make it straight-forward to create disposable and reproducable virtual machines defined in code. It is from my understanding primarily used to create development envirornments, but it can be used for anything involving virtual machines. Vagrant is not tied to any particular virtualization technology, and uses the concept of "providers" to as a high-level abstraction for underlying hypovisors. As Vagrant is widely used you can find providers for pretty much anything. Worth mentioning is the VirtualBox and OpenStack providers, which are the ones I used during this project. The VirtualBox provider is the most popular choice, due to how simple it is to set up. There are a couple OpenStack providers, but I chose to use "vagran-openstack-provider"\cite{vagrantopenstackprovidergithub}, as it bases it's machines on images from OpenStack, whereas the other one uses OpenStack compliant boxes.
+Vagrant\cite{vagrantwebsite} is an Open-source automation tool for creating and provisioning virtual machines. It was created to make it straight-forward to create disposable and reproducible virtual machines defined in code. It is from my understanding primarily used to create development environments, but it can be used for anything involving virtual machines. Vagrant is not tied to any particular virtualisation technology, and uses the concept of "providers" to as a high-level abstraction for underlying hypervisors. As Vagrant is widely used you can find providers for pretty much anything. Worth mentioning is the VirtualBox and OpenStack providers, which are the ones I used during this project. The VirtualBox provider is the most popular choice, due to how simple it is to set up. There are a couple OpenStack providers, but I chose to use "vagrant-openstack-provider"\cite{vagrantopenstackprovidergithub}, as it bases it's machines on images from OpenStack, whereas the other one uses OpenStack compliant boxes.
 
 \subsection{Jenkins Configuration as Code}
 
@@ -114,7 +114,7 @@ Onceover\cite{onceovergithub} is a tool for generating and running tests for con
 
 \subsection{Acceptance testing at OpenStack}
 
-OpenStack is using a combination of Vagrant and Beaker to run their Puppet module tests on OpenStack instances \cite{puppetmodulefunctionaltestingbeakerinsidevagrant}\cite{openstackpuppetmodulefunctionaltestingproposal}. Because the support for OpenStack nodes is so poor they have decided to create the SUTs via Vagrant using OpenStack as the provider, install Beaker as part of the provisioning process and run Beaker directly on the host (Vagrant controlled) machine by setting Beaker's hyporvisor to "none" \cite{puppetmodulefunctionaltestingbeakerinsidevagrantnodeexample}\cite{openstackci}.
+OpenStack is using a combination of Vagrant and Beaker to run their Puppet module tests on OpenStack instances \cite{puppetmodulefunctionaltestingbeakerinsidevagrant}\cite{openstackpuppetmodulefunctionaltestingproposal}. Because the support for OpenStack nodes is so poor they have decided to create the SUT's via Vagrant using OpenStack as the provider, install Beaker as part of the provisioning process and run Beaker directly on the host (Vagrant controlled) machine by setting Beaker's hypervisor to "none" \cite{puppetmodulefunctionaltestingbeakerinsidevagrantnodeexample}\cite{openstackci}.
 
 %\subsection{puppetlabs-ntp} for beaker-rspec stuff?
 
@@ -136,7 +136,7 @@ During the project research was done so I had a general idea of how people where
 \url{https://github.com/tholok97/imt3005-project-cicd}
 \\
 \\
-This repository serves as the control-repo for the infratructure I built during the project, and also includes OpenStack Heat code to bring up a stack running the control-repo. During the project I manually tested features directly on the OpenStack instances of the stack, and tried to incorporate changes into this repository once they were stable enough.
+This repository serves as the control-repo for the infrastructure I built during the project, and also includes OpenStack Heat code to bring up a stack running the control-repo. During the project I manually tested features directly on the OpenStack instances of the stack, and tried to incorporate changes into this repository once they were stable enough.
 
 \subsection{The imt3005-vagrant-vm repository}
 
@@ -159,28 +159,28 @@ Most of the Beaker documentation is about Puppet module testing, so as part of l
 
 \subsection{OpenStack Heat stack}
 
-A core part of this project was having the infrastructure completely defined in code, so creating the stack was key. I based my infrastructure on IaC-Heat-cr\cite{iacheatcrgithub}, so creating the initial setup was went quite quickly. What I've needed to change from that stack was to reduce it down to three machines, make it use my own control-repo instead of contro-repo-cr\cite{controlrepocr} and to inject some ssh keys through the bootscripts ran at stack creation.
+A core part of this project was having the infrastructure completely defined in code, so creating the stack was key. I based my infrastructure on IaC-Heat-cr\cite{iacheatcrgithub}, so creating the initial setup was went quite quickly. What I've needed to change from that stack was to reduce it down to three machines, make it use my own control-repo instead of contro-repo-cr\cite{controlrepocr} and to inject some ssh keys through the boot scripts ran at stack creation.
 \\
 \\
 I decided to have the infrastructure definition in the same repository as the control-repo for simplicity. This proved to be beneficial as the infrastructure definition and control-repo always were in-sync. A side-effect is that r10k deploys the infrastructure definition together with the roles and profiles, which seems a little dirty. 
 
 \subsection{Beaker}
 
-Beaker proved to be more difficult to work with than expected. The intial goal was to have my whole control-repo tested through Beaker, but this proved to be a difficult task inside of Skyhigh. 
+Beaker proved to be more difficult to work with than expected. The initial goal was to have my whole control-repo tested through Beaker, but this proved to be a difficult task inside of Skyhigh. 
 
 \subsubsection{Issues with the documentation}
 
-While learning with Beaker I discovered several issues in the documentation. This seems strange, as the project appears to be well maintained. The biggest bug I found was in what might be the most important piece of documentatino of all: the "getting started" tutorial \cite{beakertutorialwithproblem}. Following the tutorial step by step rewards you with a big error message following the final command, which is not very inviting. The bug was not easy to fix either. It turns out the tutorial uses functionality from Beaker version 3 which has been completely revised for Beaker 4. Installing Puppet on SUTs used to be a part of the core Beaker project, but has since been moved out into a separate plugin and revised. This meant that before I could even run a Beaker test I had to learn one of it's plugins.
+While learning with Beaker I discovered several issues in the documentation. This seems strange, as the project appears to be well maintained. The biggest bug I found was in what might be the most important piece of documentation of all: the "getting started" tutorial \cite{beakertutorialwithproblem}. Following the tutorial step by step rewards you with a big error message following the final command, which is not very inviting. The bug was not easy to fix either. It turns out the tutorial uses functionality from Beaker version 3 which has been completely revised for Beaker 4. Installing Puppet on SUT's used to be a part of the core Beaker project, but has since been moved out into a separate plugin and revised. This meant that before I could even run a Beaker test I had to learn one of it's plugins.
 \\
 \\
-I intend to create an issue on the Beaker issue tracker \cite{beakerissuetracker} as soon as I have the time. This will be my first real OpenSource contribution, which is exciting.
+I intend to create an issue on the Beaker issue tracker \cite{beakerissuetracker} as soon as I have the time. This will be my first real Open Source contribution, which is exciting.
 
 \subsubsection{The Beaker-openstack plugin}
 
-The most common way to run Beaker seems to be using Vagrant with VirtualBox. This was what I initially planned on doing, but it turns out Skyhigh instances do not support hardware virtualization. VirtualBox running on a system without hardware virtualization is not a pleasant experience, as virtual machines must be 32-bit, and creation and deletion will be very slow. I abandoned VirtualBox for what in principle is a much better solution anyways: using Skyhigh itself as the hyporvisor for Beaker.
+The most common way to run Beaker seems to be using Vagrant with VirtualBox. This was what I initially planned on doing, but it turns out Skyhigh instances do not support hardware virtualization. VirtualBox running on a system without hardware virtualization is not a pleasant experience, as virtual machines must be 32-bit, and creation and deletion will be very slow. I abandoned VirtualBox for what in principle is a much better solution anyways: using Skyhigh itself as the hypervisor for Beaker.
 \\
 \\
-In concept Beaker using Skyhigh for it's SUTs is a good idea. You could run your functional tests on the exact same images as the production systems are using. You could even provision them the exact same way as the production systems as you have access to the bootscripts for the intances in the stack. The issue is that to do this you are dependant on a plugin, and although there is a Beaker-openstack plugin, it is experimental and does not seem stable. First of all it does not immidiately seem to support OpenStack Keystone version 3, which is what Skyhigh seems to be using. Authenticating with Keystone version 2 gives 404 responses, and the top-level API call indicates it is depracted. Looking into the code for the library it does mention Keystone version 3 though, but it is using it in a very strange way. The following snippet is from the part of the library that is causing issues \cite{beakeropenstackproblematicpart}:
+In concept Beaker using Skyhigh for it's SUT's is a good idea. You could run your functional tests on the exact same images as the production systems are using. You could even provision them the exact same way as the production systems as you have access to the boot scripts for the instances in the stack. The issue is that to do this you are dependant on a plugin, and although there is a Beaker-openstack plugin, it is experimental and does not seem stable. First of all it does not immediately seem to support OpenStack Keystone version 3, which is what Skyhigh seems to be using. Authenticating with Keystone version 2 gives 404 responses, and the top-level API call indicates it is deprecated. Looking into the code for the library it does mention Keystone version 3 though, but it is using it in a very strange way. The following snippet is from the part of the library that is causing issues \cite{beakeropenstackproblematicpart}:
 
 \begin{minted}[firstnumber=48,fontsize=\tiny,linenos,breaklines]{Ruby}
 # Keystone version 3 requires users and projects to be scoped
@@ -194,16 +194,16 @@ end
 
 Line 48 to 52 seems like a temporary solution, as it forces you to use "Default" domain when authenticating. The domain Skyhigh is expecting is "NTNU", so this might be part of the issue. Line 54 is where the library completely fails. There is a bug from inside the function call, which is a poorly documented call to another library, so I did not spend time debugging it.
 
-\subsubsection{Using Vagrant for creation of SUTs for Beaker} \label{beakerinsidevagrantexplanation}
+\subsubsection{Using Vagrant for creation of SUT's for Beaker} \label{beakerinsidevagrantexplanation}
 
-While researching alternate approaches to having Beaker work with OpenStack this was the one that seemed the most stable. Instead of having Beaker manage it's SUTs, you instead use Vagrant and it's excellent "vagrant-openstack-plugin" to manage OpenStack instances to test on, install Beaker on the instances, and trick Beaker to run it's tests on the machine it is installed on, which is the Vagrant-managed OpenStack instance \cite{puppetmodulefunctionaltestingbeakerinsidevagrant}\cite{openstackpuppetmodulefunctionaltestingproposal}. This lets you create exact copies of the production instances, with the only difference being the Beaker installation. Beaker tests can run as normal, but you are giving away the ability to test the system from the outside, as Beaker is inside the SUT calling itself with localhost. Beaker also has the very interesting ability to create multiple SUTs and do tests between them, which you are missing out on.
+While researching alternate approaches to having Beaker work with OpenStack this was the one that seemed the most stable. Instead of having Beaker manage it's SUT's, you instead use Vagrant and it's excellent "vagrant-openstack-plugin" to manage OpenStack instances to test on, install Beaker on the instances, and trick Beaker to run it's tests on the machine it is installed on, which is the Vagrant-managed OpenStack instance \cite{puppetmodulefunctionaltestingbeakerinsidevagrant}\cite{openstackpuppetmodulefunctionaltestingproposal}. This lets you create exact copies of the production instances, with the only difference being the Beaker installation. Beaker tests can run as normal, but you are giving away the ability to test the system from the outside, as Beaker is inside the SUT calling itself with localhost. Beaker also has the very interesting ability to create multiple SUT's and do tests between them, which you are missing out on.
 \\
 \\
 I did not end up implementing this in the project control-repo, but I have done enough manual testing to know that automating the process is possible. An example of how this looks like is provided as an appendix: \ref{beakerinsidevagrantexample}. With the Vagrantfile set up you would run \mintinline{bash}{vagrant up --debug} followed by \mintinline{bash}{vagrant destroy -f --debug} in a pipeline script. Beaker would run it's tests during \mintinline{bash}{vagrant up --debug}, and fail if anything goes wrong, which is what we want. Jenkins would catch this error and display all the output back to us so we can figure out what went wrong.
 
 \subsubsection{Beaker-rspec tests for gossinbackup module}
 
-To learn Beaker I created simple tests for my Puppet gossinbackup module. I created them to run as Vagrant with VirtualBox as a hyporvisor, so they unfortunately can not be used in the project infrastructure. The code is included here: \ref{gossinbackuptests}.
+To learn Beaker I created simple tests for my Puppet gossinbackup module. I created them to run as Vagrant with VirtualBox as a hypervisor, so they unfortunately can not be used in the project infrastructure. The code is included here: \ref{gossinbackuptests}.
 
 \subsection{Jenkins}
 
@@ -244,10 +244,10 @@ jobs:
       }
 \end{minted}
 
-Line 1 defines a list of jobs, and line 5 to 18 is a "seed job" that sets up a pipline for the control-repo. The "credentials" call on line 12 refers to a private ssh key stored using the credentials plugin. See the security discussion.
+Line 1 defines a list of jobs, and line 5 to 18 is a "seed job" that sets up a pipeline for the control-repo. The "credentials" call on line 12 refers to a private ssh key stored using the credentials plugin. See the security discussion.
 \\
 \\
-An issue worth mentioning is how to invoke these jobs. Continuous Integration is based around integrating each change you make into the main trunk, so triggering a job run on each push to it's repository is desired. This is not possible in Skyhigh, as the floating IP addresses you are given are internal to NTNU's network. Therefore I've been manually triggering job runs during this project. I could also have had the jobs run on an intervall, but as the course book\cite{coursebook} states this is not good enough. For proper CI you would set up webhooks between Github (or whatever version control host you use) and the Jenkins server. 
+An issue worth mentioning is how to invoke these jobs. Continuous Integration is based around integrating each change you make into the main trunk, so triggering a job run on each push to it's repository is desired. This is not possible in Skyhigh, as the floating IP addresses you are given are internal to NTNU's network. Therefore I've been manually triggering job runs during this project. I could also have had the jobs run on an interval, but as the course book\cite{coursebook} states this is not good enough. For proper CI you would set up webhooks between Github (or whatever version control host you use) and the Jenkins server. 
 
 \subsection{Test pipelines}
 
@@ -360,7 +360,7 @@ As indicated in the snippet, the acceptance tests could either run as standard b
 Because of time-constraints I did not get to implement any kind of CI/CD application pipeline. I did look into how I would go forward with doing it though, and set up a pipeline through the web UI that ultimately deployed a Golang binary to the application server following a tutorial\cite{buidonjenkinsandpublishwithpipelines}. Here are the steps I would take to implement this in the control-repo:
 
 \begin{enumerate}
-\item Write a basic Golang appliaction with a few tests. This is \textbf{trivial} to do in Golang.
+\item Write a basic Golang application with a few tests. This is \textbf{trivial} to do in Golang.
 \item Set up a seed job for the repository, following the same convention used for the control-repo and the gossinbackup module.
 \item Set up a Jenkinsfile in the repository, matching the job created in the tutorial I followed \cite{buidonjenkinsandpublishwithpipelines}.
 \item Deploy to the application server using the same basic ssh method used in the control-repo pipeline.
@@ -371,7 +371,7 @@ Because of time-constraints I did not get to implement any kind of CI/CD applica
 Although this was not the focus of this project, I will briefly discuss the Vagrant environment I created to work with this course \cite{tholok97vagrantvm}. Currently it includes all the tools needed, and I believe it is general enough that anyone can clone it and start using it themselves. Environment-specific configuration is done through a yaml file, and all the "data" of the environment is shared with the underlying host, so the environment is completely disposable. It gave me a chance to experiment freely, as I could simply rebuild it any time I messed up.
 \\
 \\
-Relevant to this project is the fact that since I've done all of my work inside this environment, it should be possible for anyone to clone it down and get the exact same setup that I've used. This one solution to the "it works on my machine" issue, as everyone will have the exact same machine. In addition it's fully possible to make this environment mirror that found in production. I have also managed to successfully set up Vagrant to provision it's VM in Skyhigh, which allows it to use the exact same image as production does. You could take this even further by having Vagrant apply the same bootscript to it as well.
+Relevant to this project is the fact that since I've done all of my work inside this environment, it should be possible for anyone to clone it down and get the exact same setup that I've used. This one solution to the "it works on my machine" issue, as everyone will have the exact same machine. In addition it's fully possible to make this environment mirror that found in production. I have also managed to successfully set up Vagrant to provision it's VM in Skyhigh, which allows it to use the exact same image as production does. You could take this even further by having Vagrant apply the same boot script to it as well.
 
 
 
@@ -422,9 +422,9 @@ Currently the Puppet master has ssh access to both of the other machines. This i
 
 Keeping all test definitions under version control means that an attacker with access to my repositories could see everything I test for, and more importantly, everything I \textbf{don't} test for. This is a consequence of having everything defined as code, and makes securing the repositories even more important. This issue is somewhat mitigated by the fact that the control-repo only contains "seed jobs". The actual test definitions are in each individual repository in the form of a "Jenkinsfile".
 
-\subsection{Infratructure defined in control-repo}
+\subsection{Infrastructure defined in control-repo}
 
-I chose to have the infrastruce definition in the control-repo, which means r10k "deploys" this code as well to the Puppet master. This means that with access to the Puppet master an attacker could find security holes in my setup. 
+I chose to have the infrastructure definition in the control-repo, which means r10k "deploys" this code as well to the Puppet master. This means that with access to the Puppet master an attacker could find security holes in my setup. 
 
 %Provide a brief security analysis. Are you opening any new attack vectors? What
 %are the risks? Are there sensitive data? Are clients and servers mutually
@@ -432,7 +432,7 @@ I chose to have the infrastruce definition in the control-repo, which means r10k
 
 \section{Conclusions}
 
-My original goal was to experiment with CI/CD, and I feel I have accomplished that. I am left with a technical understanding of how CI/CD could be implemented using the technologies I have explored. Continuous Integration in my project exists in the form of the pipeline jobs running tests on changes made (although running them automatically was not possible, as I explained). With the features I explored, but didn't implement, I would feel pretty saffe inviting others to work on the codebase as well. Continuous Delivery is somewhat achieved by the fact that I steered away from experimenting though the CI/CD piplines, but instead did rough manual experimentation and testing before commiting to production.
+My original goal was to experiment with CI/CD, and I feel I have accomplished that. I am left with a technical understanding of how CI/CD could be implemented using the technologies I have explored. Continuous Integration in my project exists in the form of the pipeline jobs running tests on changes made (although running them automatically was not possible, as I explained). With the features I explored, but didn't implement, I would feel pretty safe inviting others to work on the codebase as well. Continuous Delivery is somewhat achieved by the fact that I steered away from experimenting though the CI/CD pipelines, but instead did rough manual experimentation and testing before committing to production.
 \\
 \\
 Beaker turned out to be difficult to work with in Skyhigh. Most examples are of using Beaker with Vagrant and VirtualBox, which is not possible in Skyhigh, so most of the time spent on Beaker was getting it to even run. The method I arrived at does work though, although it has it's drawbacks, and I did not have time to fully implement it.
@@ -441,7 +441,7 @@ Beaker turned out to be difficult to work with in Skyhigh. Most examples are of 
 As for the infrastructure I wanted to set up, I am not finished. I am convinced I would be able to do it with more time however, and I have tried to lay out how I would achieve this in this report. What is implemented does meet my \mintinline{bash}{openstack create} requirement though. Following this requirement has slowed me down quite a bit, but in return I have a greater understanding and respect for how difficult it can be to define everything in code, especially with regards to secrets.
 
 %* Didn't quite reach my goal
-%* Working with Beaker outside of Virtualbox is a hassle
+%* Working with Beaker outside of VirtualBox is a hassle
 %* JCasC is very promising, but not very useable
 %* Vagrant is great
 %* Testing pipelines are great
@@ -656,7 +656,7 @@ jobs:
 # taken from https://github.com/jenkinsci/configuration-as-code-plugin/blob/master/docs/seed-jobs.md
 # and https://marcesher.com/2016/08/04/jenkins-as-code-comparing-job-dsl-and-pipelines/
 #
-# The following three jobs are just here eto show some examples of job dsl configured through JCasC
+# The following three jobs are just here to show some examples of job dsl configured through JCasC
   - script: |
       def myJob = freeStyleJob('SimpleJob')
       myJob.with {

@@ -23,5 +23,5 @@ nnoremap ø :!./c.sh<cr>
 - [x] Add appendices
 - [ ] Proof-reading
   -x[ ] Proof-read for missing citations
-- [x] write about webhooks in skyhigh
+- [x] write about webhooks in Skyhigh
 - [ ] Write about how I wrote the report?
