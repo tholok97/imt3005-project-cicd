@@ -190,7 +190,7 @@ Line 48 to 52 seems like a temporary solution, as it forces you to use "Default"
 
 While researching alternate approaches to having Beaker work with OpenStack this was the one that seemed the most stable. Instead of having Beaker manage it's SUTs, you instead use Vagrant and it's excellent "vagrant-openstack-plugin" to manage OpenStack instances to test on, install Beaker on the instances, and trick Beaker to run it's tests on the machine it is installed on, which is the Vagrant-managed OpenStack instance. This lets you create exact copies of the production instances, with the only difference being the Beaker installation. Beaker tests can run as normal, but you are giving away the ability to test the system from the outside, as Beaker is inside the SUT calling itself with localhost. Beaker also has the very interesting ability to create multiple SUTs and do tests between them, which you are missing out on.
 \\
-I did not end up implementing this in the project control-repo, but I have done enough manual testing to know that this would work. I will provide the outline of how this kind of test would look like........DO THAT
+I did not end up implementing this in the project control-repo, but I have done enough manual testing to know that this would work. I provide the outline of how this kind of test would look like as an appendix.
 
 % INCLUDE EXAMPLE VAGRANTFILE WITH BEAKER PROVISIONING SCRIPT AND SO ON
 
@@ -301,8 +301,54 @@ pipeline {
 % TODO: actually write that section
 
 \subsubsection{gossinbackup}
+
+While learning Beaker I set up basic acceptance tests for my gossinbackup module. These run fine, but use the Vagrant and VirtualBox solution, so I can not run them with my current setup on Skyhigh. Here is what the pipeline currently looks like, with the parts I did not get to implement added. The syntax checks are the same as the ones we did in lab task 7.
+
+\begin{minted}[fontsize=\tiny,linenos,breaklines]{groovy}
+pipeline {
+  agent {
+    dockerfile {
+      filename 'pdk_agent_dockerfile'
+      dir 'jenkins_agents'
+    }
+  }
+  stages {
+    stage('Validate and lint') {
+      steps {
+        sh 'pdk validate metadata,puppet'
+      }
+    }
+    stage('Unit tests') {
+      steps {
+        sh 'pdk test unit --debug'
+      }
+    }
+
+    // BEGIN NOT IMPLEMENTED
+    stage('Acceptance test') {
+      steps {
+        sh 'bundle install && bundle exec rspec spec/acceptance/'
+        // OR
+        sh './runVagrantBeakerTest.sh'
+      }
+    }
+    // END NOT IMPLEMENTED
+  }
+}
+\end{minted}
+
+As indicated in the snippet, the acceptance tests could either run as standard beaker test runs, or by using the Vagrant solution I explained earlier. The first solution works, but not in Skyhigh, and the latter is not implemented.
+
 \subsubsection{application} % TODO :1
-% \subsection{Vagrant-vm} % include discurrsion on this?
+
+TBA
+
+
+\subsection{Vagrant-vm}
+
+Although this was not the focus of this project, I will briefly discuss the Vagrant box I created to work with this course. Currently it includes all the tools needed, and I believe it is general enough that anyone can clone it and start using it themselves. Environment-specific configuration is done through a yaml file, and all the "data" of the environment is shared with the underlying host, so the environment is completely disposable. It gave me a chance to experiment freely, as I could simply rebuild it any time I messed up.
+\\
+Relevant to this project is the fact that since I've done all of my work inside this environment, it should be possible for anyone to clone it down and get the exact same setup that I've used. This one solution to the "it works on my machine" issue, as everyone will have the exact same machine. In addition it's fully possible to make this environment mirror that found in production. I have set up Vagrant to provision it's VM in Skyhigh, which allows it to use the exact same image as production does. You could take this even further by having Vagrant apply the same bootscript to it as well.
 
 
 
@@ -331,9 +377,11 @@ Security was not a primary focus of this project, so there are a few concerns th
 \subsection{Secrets}
 
 Handling secrets was not a focus during this project, so I have chosen some dodgy solutions here and there. The only way of safely bringing in secrets with my setup is during provisioning of the Heat stack, by injecting them into the machines from Heat variables. The ssh key pair between the Jenkins server and the Puppet master is injected in this way, as well as the Github ssh key the Puppet master uses for r10k deploys. With access to my development machine an attacker would have access to every secret in my infrastructure, which I would consider a huge security issue for larger deployments. A solution here would be to generate the key pair between the Puppet master and Jenkins server either during stack creation or through Puppet.
-
-The above problem is way smaller than the greatest sin I did during this project though, which was to include a private key in plaintext in the control-repo. The Jenkins server needs to authenticate with Github to clone down repositories for testing, and I did not find any straight-forward way to give Jenkins a private key for this, so I ended up just including the key as part it's JCasC configuration. The key is a "Github deploy key", however, so an attacker with access to this key would only have \textbf{read} access to \textbf{the repository the key was linked to}. There are a couple solutions to this issue:
-
+\\
+JCasC lets you define user passwords in plaintext in the yaml configuration file, so I chose to do that for simplicity. This is an obvious security flaw that could be fixed by the below list of solutions.
+\\
+The above problems are way smaller than the greatest sin I did during this project though, which was to include a private key in plaintext in the control-repo. The Jenkins server needs to authenticate with Github to clone down repositories for testing, and I did not find any straight-forward way to give Jenkins a private key for this, so I ended up just including the key as part it's JCasC configuration. The key is a "Github deploy key", however, so an attacker with access to this key would only have \textbf{read} access to \textbf{the repository the key was linked to}. There are a couple solutions to this issue:
+\\
 \begin{itemize}  
 \item \textbf{Using JCasC secrets}: JCasC includes some basic functionality for handling secrets. One is injecting secrets into the configuration from environment variables. I could have set up environment variables during stack creation and included the deploy key this way
 \item \textbf{Using hiera-eyaml}: This would allow the key to be stored in the repository in an encrypted form. A decryption key could be given to the Puppet master during stack creation.
@@ -350,6 +398,8 @@ Keeping all test definitions under version control means that an attacker with a
 
 \subsection{Infratructure defined in control-repo}
 
+I chose to have the infrastruce definition in the control-repo, which means r10k "deploys" this code as well to the Puppet master. This means access to the Puppet master an attacker could find security holes in my setup. 
+
 % r10k places infrastructure definion on master.... talk about taht 
 
 
@@ -358,6 +408,14 @@ Keeping all test definitions under version control means that an attacker with a
 %authenticating each other? etc etc
 
 \section{Conclusions}
+
+
+* Didn't quite reach my goal
+* Working with Beaker outside of Virtualbox is a hassle
+* JCasC is very promising, but not very useable
+* Vagrant is great
+* Testing pipelines are great
+
 
 TBA
 
