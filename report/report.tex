@@ -353,7 +353,7 @@ pipeline {
 
 As indicated in the snippet, the acceptance tests could either run as standard beaker test runs, or by using the Vagrant solution I explain here: \ref{beakerinsidevagrantexample}. The first solution works, but not in Skyhigh, and the latter is not implemented.
 
-\subsubsection{application} \label{applicationpipeline}
+\subsubsection{Application} \label{applicationpipeline}
 
 Because of time-constraints I did not get to implement any kind of CI/CD application pipeline. I did look into how I would go forward with doing it though, and set up a pipeline through the web UI that ultimately deployed a Golang\cite{golang} binary to the application server following a tutorial\cite{buidonjenkinsandpublishwithpipelines}. Here are the steps I would take to implement this in the control-repo:
 
