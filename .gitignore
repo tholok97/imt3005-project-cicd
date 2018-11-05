@@ -1,7 +1,8 @@
 modules/
 
+
 # ignore latex stuff
-*.pdf
+report/*.pdf
 *.out
 *.aux
 *.log
