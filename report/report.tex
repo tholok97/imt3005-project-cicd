@@ -614,7 +614,7 @@ end
 
 \section{Jenkins.yaml} \label{jenkinsyaml}
 
-\begin{minted}[fontsize=\tiny,linenos,breaklines]{ruby}
+\begin{minted}[fontsize=\tiny,linenos,breaklines]{yaml}
 # JCasC configuration file. Heavily inspired by https://github.com/Praqma/praqma-jenkins-casc
 jenkins:
   systemMessage: "Greetings friend! I am a system message configured through JCasC"
@@ -750,7 +750,7 @@ security:
 
 \subsection{topology.yaml}
 
-\begin{minted}[fontsize=\tiny,linenos,breaklines]{ruby}
+\begin{minted}[fontsize=\tiny,linenos,breaklines]{yaml}
 heat_template_version: 2013-05-23
 
 description: >
@@ -914,7 +914,7 @@ resources:
 
 \subsection{managed\_linux\_server\_one\_nic.yaml}
 
-\begin{minted}[fontsize=\tiny,linenos,breaklines]{ruby}
+\begin{minted}[fontsize=\tiny,linenos,breaklines]{yaml}
 heat_template_version: 2013-05-23
 
 description: >
@@ -999,7 +999,7 @@ resources:
 
 \subsection{managed\_linux\_server\_one\_nic.bash}
 
-\begin{minted}[fontsize=\tiny,linenos,breaklines]{ruby}
+\begin{minted}[fontsize=\tiny,linenos,breaklines]{bash}
 	#!/bin/bash -v
 tempdeb=$(mktemp /tmp/debpackage.XXXXXXXXXXXXXXXXXX) || exit 1
 wget -O "$tempdeb" https://apt.puppetlabs.com/puppet5-release-bionic.deb
@@ -1031,7 +1031,7 @@ chown ubuntu /home/ubuntu/.ssh/id_rsa
 
 \subsection{manager\_boot.sh}
 
-\begin{minted}[fontsize=\tiny,linenos,breaklines]{ruby}
+\begin{minted}[fontsize=\tiny,linenos,breaklines]{bash}
 #!/bin/bash -v
 tempdeb=$(mktemp /tmp/debpackage.XXXXXXXXXXXXXXXXXX) || exit 1
 wget -O "$tempdeb" https://apt.puppetlabs.com/puppet5-release-bionic.deb
