@@ -20,7 +20,7 @@ imt3005-project-cicd/
 ├── infrastructure/                       # OpenStack Heat infrastructure definition that defines a stack running this control-repo.
 ├── manifests/
 │   └── site.pp                           # The "main" manifest that contains a default node definition.
-├── report/                               # Contains the LaTeX report
+├── report/                               # Contains the LaTeX report.
 ├── scripts/
 │   ├── code_manager_config_version.rb    # A config_version script for Code Manager.
 │   ├── config_version.rb                 # A config_version script for r10k.
@@ -29,12 +29,12 @@ imt3005-project-cicd/
 │   ├── profile/                          # The profile module.
 │   └── role/                             # The role module.
 ├── LICENSE
-├── report.pdf                            # PDF of report. Produced by LaTeX code in `report/` directory
 ├── Puppetfile                            # A list of external Puppet modules to deploy with an environment.
 ├── README.md
-├── README_original.md                    # Original readme from Puppetlabs template
+├── README_original.md                    # Original readme from Puppetlabs template.
 ├── environment.conf                      # Environment-specific settings. Configures the moduelpath and config_version.
-└── hiera.yaml                            # Hiera's configuration file. The Hiera hierarchy is defined here.
+├── hiera.yaml                            # Hiera's configuration file. The Hiera hierarchy is defined here.
+└── report.pdf                            # PDF of report. Produced by LaTeX code in `report/` directory.
 ```
 
 ## Related repositories
