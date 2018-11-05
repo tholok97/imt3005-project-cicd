@@ -4,7 +4,7 @@
 
 The goal of the project is to experiment with CI/CD using OpenStack, Jenkins and Beaker. I'm trying to accomplish an infrastructure with a Puppet Master, a Jenkins server and an application server that runs CI/CD on any changes made, and ultimately deploys them into production.  
 
-Please see [the report](./report) for more details about the project itself.
+Please see [the report](./report.pdf) for more details about the project itself. It was created from the LaTeX found in `report/`.
 
 ## Structure
 
@@ -29,8 +29,10 @@ imt3005-project-cicd/
 │   ├── profile/                          # The profile module.
 │   └── role/                             # The role module.
 ├── LICENSE
+├── report.pdf                            # PDF of report. Produced by LaTeX code in `report/` directory
 ├── Puppetfile                            # A list of external Puppet modules to deploy with an environment.
 ├── README.md
+├── README_original.md                    # Original readme from Puppetlabs template
 ├── environment.conf                      # Environment-specific settings. Configures the moduelpath and config_version.
 └── hiera.yaml                            # Hiera's configuration file. The Hiera hierarchy is defined here.
 ```
